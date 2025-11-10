@@ -1,0 +1,187 @@
+ \section{Lecture 8:  Continuous Priors}
+\subsection*{Bayesian Updating: Continuous Priors}
+
+Continuous hypotheses: parameter can take any value in a continuous range.
+
+Examples: 
+Bernoulli with unknown \(p \in [0,1]\). \\
+Exponential with unknown \(\lambda > 0\). \\
+Normal with unknown \((\mu, \sigma) \in (-\infty, \infty) \times [0, \infty)\).
+
+
+\textit{Example: Discrete Hypotheses (3 Coins)}
+
+Three types of coins: \(p = 0.25, 0.5, 0.75\). Ratios \(1:2:1\).\\
+Data: TT. Find \(P(C_{0.25}|data)\).
+
+\(
+P(C_{0.25}|data)
+\)
+% \(
+
+% \resizebox{0.85\linewidth}{!}{$
+% =\frac{P(data|C_{0.25})P(C_{0.25})}{
+% P(data|C_{0.25})P(C_{0.25}) + P(data|C_{0.5})P(C_{0.5}) + P(data|C_{0.75})P(C_{0.75})}
+% $}
+% = 0.5
+% \)
+
+\(
+= 
+\frac{(0.75)^2(1/4)}{(0.75)^2(1/4) + (0.5)^2(1/2) + (0.25)^2(1/4)} \\ = 0.5
+\) 
+
+
+\subsection*{Continuous Hypotheses}
+
+Let \(\theta \in [0,1]\) be the probability of heads. \\
+Prior: \( f(\theta) = k\theta(1 - \theta) \). \\
+Likelihood for TT: \( p(x|\theta) = (1 - \theta)^2 \). \\
+
+Bayes update:
+\(
+f(\theta|x) = \frac{p(x|\theta)f(\theta)}{p(x)} 
+= \frac{k\theta(1 - \theta)^3}{p(x)}
+\)
+where 
+\(
+p(x) = \int_0^1 (1 - \theta)^2 k\theta(1 - \theta)\,d\theta
+\) 
+is the normalizing factor (prior predictive probability).
+
+\subsection*{Uniform Posterior (Single \(x\))}
+
+Flat prior \(f(\theta)=1.\)
+
+\(
+f(x|\theta)=
+\begin{cases}
+0, & \theta < x\\
+\dfrac{1}{\theta}, & x \le \theta \le 1
+\end{cases}
+\)
+
+
+% \begin{tabular}{lccc}
+% \hline
+% Hyp. & Prior \(f(\theta)\) & Likelihood \(f(x|\theta)\) & Unnorm. Posterior\\
+% \hline
+% \(0<\theta<x\) & \(d\theta\) & 0 & 0\\
+% \(x\le\theta\le1\) & \(d\theta\) & \(\dfrac{1}{\theta}\) & \(\dfrac{d\theta}{\theta}\)\\
+% \hline
+% Total & 1 & & \\
+% \hline
+% \end{tabular}
+
+
+\[
+c\int_x^1 \frac{d\theta}{\theta}=1 \Rightarrow c=-\frac{1}{\ln(x)}>0.
+\]
+\subsection*{Uniform Posterior (Multiple \(x_i\))}
+
+\(
+f(x_1,\ldots,x_n|\theta)=
+\begin{cases}
+0, & \theta<\max\{x_1,\ldots,x_n\}\\
+\dfrac{1}{\theta^n}, & \max\{x_1,\ldots,x_n\}\le\theta\le1
+\end{cases}
+\)
+
+Let \(x_M=\max\{x_1,\ldots,x_n\}.\)
+
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lccc}
+\hline
+Hyp. & Prior \(f(\theta)\) & Likelihood \(f(\text{data}|\theta)\) & Unnorm. Posterior\\
+\hline
+\(\theta<x_M\) & \(d\theta\) & 0 & 0\\
+\(x_M\le\theta\le1\) & \(d\theta\) & \(\dfrac{1}{\theta^n}\) & \(\dfrac{d\theta}{\theta^n}\)\\
+\hline
+Total & 1 & & \\
+\hline
+\end{tabular}
+}
+
+\[
+c\int_{x_M}^1 \frac{d\theta}{\theta^n}=1 \Rightarrow c=\frac{n-1}{x_M^{1-n}-1}.
+\]
+
+
+
+\subsection*{Example: Probability of Tails}
+
+Prior: \( f(\theta) = 3\theta^2 \). \\
+Likelihood for tails (\(x=0\)):\\ \( p(x=0|\theta) = 1 - \theta \).
+
+\(
+p(x=0) = \int_0^1 (1 - \theta)3\theta^2\,d\theta = \frac{1}{4}
+\) 
+
+Interpretation: A process (e.g. treatment success) with uncertain success probability \(\theta\), biased toward success by prior \(3\theta^2\).
+
+\subsection*{Bayes’ Theorem: Continuous Case}
+
+Given prior \( f(\theta) \), likelihood \( p(x|\theta) \):
+
+\(
+f(\theta|x) = \frac{p(x|\theta)f(\theta)}{p(x)} 
+= \frac{p(x|\theta)f(\theta)}{\int_a^b p(x|\theta)f(\theta)\,d\theta}
+\) 
+
+\subsection*{Bent Coin, Continuous Prior}
+
+Prior: \( f(\theta) = 2\theta \), \( 0 \le \theta \le 1 \). \\
+Data: 1st toss = H. \\
+
+Posterior:
+\(
+f(\theta|x) \propto \theta \times 2\theta = 2\theta^2
+\)
+Normalize:
+\(
+\int_0^1 2\theta^2\,d\theta = \frac{2}{3}
+\Rightarrow f(\theta|x) = 3\theta^2
+\) \\
+
+Second toss = T. \\
+\(
+f(\theta|x) \propto 3\theta^2(1 - \theta)
+\)
+Normalize:
+\(
+\int_0^1 3\theta^2(1 - \theta)\,d\theta = \frac{1}{4}
+\Rightarrow f(\theta|x) = 12\theta^2(1 - \theta)
+\) 
+
+\subsection*{Example: Beta Posterior Form}
+
+Flat prior: \( f(\theta) = 1 \). \\
+Data: 27 tosses, 15 heads, 12 tails. 
+
+Posterior:
+\(
+f(\theta|x) = \frac{\theta^{15}(1 - \theta)^{12}}{T}
+\)
+where
+\(
+T = \int_0^1 \theta^{15}(1 - \theta)^{12}\,d\theta
+\)
+Hence posterior is \( \text{Beta}(16, 13) \). 
+
+\subsection*{Beta Distribution}
+
+Definition:
+\(
+f(\theta) = c\theta^{a-1}(1 - \theta)^{b-1}
+\)
+with normalization:
+\(
+c = \frac{(a + b - 1)!}{(a - 1)!(b - 1)!}
+\)
+Thus \( f(\theta) \) is the pdf of \( \text{Beta}(a, b) \).
+
+\textit{Example:}  
+If posterior \( f(\theta|x) = 3\theta^2(1 - \theta) \),  
+then \( a = 3, b = 2 \Rightarrow \text{Beta}(3,2) \). 
+
+
