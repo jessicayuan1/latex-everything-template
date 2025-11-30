@@ -1,4 +1,4 @@
- \section{Lecture 8:  Continuous Priors}
+ \section*{Lecture 8:  Continuous Priors}
 \subsection*{Bayesian Updating: Continuous Priors}
 
 Continuous hypotheses: parameter can take any value in a continuous range.
@@ -152,36 +152,3 @@ Normalize:
 \int_0^1 3\theta^2(1 - \theta)\,d\theta = \frac{1}{4}
 \Rightarrow f(\theta|x) = 12\theta^2(1 - \theta)
 \) 
-
-\subsection*{Example: Beta Posterior Form}
-
-Flat prior: \( f(\theta) = 1 \). \\
-Data: 27 tosses, 15 heads, 12 tails. 
-
-Posterior:
-\(
-f(\theta|x) = \frac{\theta^{15}(1 - \theta)^{12}}{T}
-\)
-where
-\(
-T = \int_0^1 \theta^{15}(1 - \theta)^{12}\,d\theta
-\)
-Hence posterior is \( \text{Beta}(16, 13) \). 
-
-\subsection*{Beta Distribution}
-
-Definition:
-\(
-f(\theta) = c\theta^{a-1}(1 - \theta)^{b-1}
-\)
-with normalization:
-\(
-c = \frac{(a + b - 1)!}{(a - 1)!(b - 1)!}
-\)
-Thus \( f(\theta) \) is the pdf of \( \text{Beta}(a, b) \).
-
-\textit{Example:}  
-If posterior \( f(\theta|x) = 3\theta^2(1 - \theta) \),  
-then \( a = 3, b = 2 \Rightarrow \text{Beta}(3,2) \). 
-
-

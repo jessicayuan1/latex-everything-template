@@ -1,64 +1,695 @@
-\section{Graphenalgorithmen}
-\subsection*{Kantenlänge}
-Jeder Kante wird eine reelle Zahl zugeordnet, die wir als Länge dieser Kante bezeichnen.
-Man spricht dann von einem Graphen mit bewerteten Kanten
-\subsection*{Algorithmus von Dijkstra}
-Dient der \emph{Bestimmung kürzester Wege} von einem fest vorgegebenen Knoten zu allen anderen Knoten
-in einem schlichten, zusammenhängenden, gerichteten Graphen mit endlicher Knotenmenge und nicht-negativ bewerteten Kanten
-und liefert einen Weg mit einer minimalen Gesamtlänge.\\
-\emph{Algorithmus}\\
-Schreibe Tabelle mit Knoten, Entfernung, Vorgänger, OK\\
-Setze alle Entf. auf $\infty$ außer $Start=0$\\
-Setze Vorg. von $Start=Start$\\
-Setze alle $OK=f$\\
-Starte Algorithmus:\\
-Wiederhole:\\
-	Suche unter den Entfernungen die kleinste$=j$, die $OK=f$ ($\Rightarrow$ beim Start also $Start$ selbst)\\
-		Setze $j=t$\\
-		Suche alle Nachbarknoten $k$ von $j$, die noch nicht $t$ sind.\\
-		Wenn die Entfernung größer als $j+k$ setze neue Entf. und setze neuen Vorgänger.\\	
-Solange bis noch Knoten mit $OK=f$
-\subsection*{Flussprobleme}
-Modellierung von Transport von Gütern (Strom, Container etc.) entlang der Kanten.\\
-$c(e_{ij})=c_{ij}$ ist Kapazität einer Kante. $v_iv_j=e_{ij}$ ist die Menge eines Gutes,
-die entlang der Kante transportiert werden kann.
-\subsection*{Fluss}
-Ein Fluss in $G$ von der Quelle $q=v_1$ zur Senke $s=v_n$ ist eine Funktion $f$, die jeder
-Kante $e_{ij}\in E$ eine nicht-negative rationale Zahl zuordnet.
-\subsection*{Schnitt}
-Seien $X,Y$ bel. Untermengen von Knoten eines Graphen $G$. Dann ist\\
-$A(X,Y)$ die Menge der Kanten, die Knoten aus $X$ mit Knoten $Y$ verbinden.\\
-$A^+(X,Y)$ ist die Menge der Kanten, ausgehend von Knoten aus $X$, die Knoten aus $Y$
-verbinden.\\
-$A^-(X,Y)$ ist die Menge der Kanten, ausgehend von Knoten aus $Y$, die Knoten aus $X$
-verbinden.\\
-Sei $g$ eine Funktion, die den Kanten eines Graphen $G$ nicht-negative Zahlen zuordnet, dann
-gilt $g(X,Y)=\sum_{e\in A^+(X,Y)}g(e)$.\\
-Ein \emph{Schnitt} ist eine Menge von Kanten $A(X,\bar{X})$ mit $q\in X$ und $s\in\bar{X}$.\\
-\emph{Beispiel:}\\
-Wähle $X=\{q=v_1,...\}$ und $\bar{X}=\{...,s=v_n\}$ mit $...$ beliebig. Dann ist $A(X,\bar{X})=\{e_{ij},e_{...}\}$ die Menge der Kanten zwischen $X$ und $\bar{X}$.\\
-$A^+(X,\bar{X})=\{e_{ij},e_{...}\}$ die Menge der Kanten aus $X$.\\
-$A^-(X,\bar{X})=\{e_{ij},e_{...}\}$ die Menge der Kanten in $X$ hinein.\\
-Der \emph{Fluss} von den Knoten in $X$ zu den Knoten in $\bar{X}$ ist dann:\\
-$\sum_{e_{ij}\in A^+(X,Y)}f(e_{ij})-\sum_{e_{ij}\in A^-(X,Y)}f(e_{ij})$ Hierbei steht $f(e_{ij})$ für den Fluss, also der hinteren Zahl im Tupel $(x,y)$ an der Kantenbeschriftung.\\
-Die \emph{Kapazität} bestimmt man aus der vorderen Zahl jenen Tupels wie folgt:\\
-$c(X,\bar{X})=\sum_{e_{ij}\in A^+(X,Y)}c(e_{ij})$\\
-\emph{Hinweis:}\\
-Es gibt $2^n$ mögliche Schnitte wenn $n$ die Anzahl der inneren Knoten ist.
-\subsection*{Maximaler Fluss}
-Ein Fluss $f$, dessen Wert $d$ maximal ist, heißt \emph{maximaler Fluss}.\\
-Ein Fluss dessen Wert $\min\{c(X,\bar{X})\}$ entspricht, ist maximal.
-\subsection*{Vergrößernder Weg}
-Ein ungerichteter Weg von $q$ nach $s$ heißt \emph{vergrößernd}, wenn
-für jede Kante $e_{ij}$ auf dem Weg ihrer Richtung gilt: $f(e_{ij})<c(e_{ij})$
-(Vorwärtskante) bzw. $f(e_{ij})>0$ (Rückwärtskante).
-\subsection*{Algorithmus von Ford und Fulkerson}
-Initialsiere alle Flüsse mit 0.\\
-Wiederhole:\\
-	Suche guten Fluss, der optimal wird und schreibe Tabelle:\\
-	$1) q(\bot,\infty) v_x(+q,Anzahl), ... , s(+v_{...},Anzahl)$\\
-	Trage Fluss nach Komma ein.\\
-Bis:\\
-Es gibt keinen weiteren vergrößernden Fluss.\\
-Antwort: max. Fluss mit $d=...$\\
-\emph{Hinweis:} Nur soviel durchschicken wie benötigt und evtl. größte Flüsse zuerst.
+
+\section*{Conjugate Priors: Beta and Normal}
+
+A prior is conjugate to a likelihood when the posterior has the same distribution family. \\
+Posterior is proportional to (prior \times likelihood).
+
+\subsection*{Continuous Prior, Discrete Data Example}
+
+Prior: \( f(\theta)=2\theta \).\\
+Likelihood for one head: \( p(x=1|\theta)=\theta \).\\
+
+Bayes numerator: \( 2\theta \cdot \theta = 2\theta^2 \).\\
+Normalization constant: \( \int_0^1 2\theta^2\,d\theta = \frac{2}{3} \).\\
+
+Posterior: \( f(\theta|x)=3\theta^2 \).
+
+\subsection*{Continuous Prior, Continuous Data}
+
+Bayes rule for continuous case: \\
+\(
+f(\theta|x)=\frac{f(x|\theta)f(\theta)}{\int f(x|\theta)f(\theta)\,d\theta}.
+\)
+
+\subsection*{Normal Prior and Normal Likelihood}
+
+Likelihood: \( x_i \sim N(\theta,\sigma^2) \). \\
+Prior: \( \theta \sim N(\mu_{prior},\sigma_{prior}^2) \).
+Posterior: \( \theta \sim N(\mu_{post},\sigma_{post}^2) \).
+Update formulas: 
+\(
+a=\frac{1}{\sigma_{prior}^2},\quad b=\frac{n}{\sigma^2}.
+\)\\
+\(
+\mu_{post}=\frac{a\mu_{prior}+bx}{a+b},\quad
+\sigma_{post}^2=\frac{1}{a+b}.
+\)
+
+\subsection*{Example: One Normal Observation}
+
+Data: \( x=2 \). Prior: \( N(4,2^2) \). Likelihood variance: \( 3^2 \).
+\(
+a=\frac{1}{4},\; b=\frac{1}{9},\; a+b=\frac{13}{36}.
+\)\\
+\(
+\mu_{post}=\frac{1+\frac{2}{9}}{13/36}=\frac{44}{13}=3.3846.
+\)\\
+\(
+\sigma_{post}^2=\frac{36}{13}=2.7692.
+\)
+
+\subsection*{Normal/Normal Example}
+
+Basketball free throw prior: \( \theta\sim N(75,36) \).\\
+Data: \( x=85 \). Likelihood variance \( 16 \).\\
+\(
+a=\frac{1}{36},\; b=\frac{1}{16}.
+\)\\
+\(
+\mu_{post}=81.9,\; \sigma_{post}^2=11.1.
+\)
+
+\subsection*{Conjugate Prior Table}
+
+\resizebox{\linewidth}{!}{
+\(
+\begin{array}{lccc}
+\text{Model} & \text{Prior} & \text{Likelihood} & \text{Posterior}\\
+\hline
+\text{Bernoulli} & beta(a,b) & \theta^x(1-\theta)^{1-x} & beta(a+x,b+1-x)\\
+\text{Binomial} & beta(a,b) & \theta^x(1-\theta)^{N-x} & beta(a+x,b+N-x)\\
+\text{Geometric} & beta(a,b) & \theta(1-\theta)^x & beta(a+x,b+1)\\
+\text{Normal} & N(\mu_{prior},\sigma_{prior}^2) & N(\theta,\sigma^2) & N(\mu_{post},\sigma_{post}^2)\\
+\end{array}
+\)
+}
+
+\subsection*{Likelihood Principle}
+
+If \( f(x_1|\theta) \propto f(x_2|\theta) \) then the posteriors are identical.\\
+Scale factors in likelihood do not affect \( f(\theta|x) \).
+
+\subsection*{Strong Prior Example}
+
+Prior: uniform on (0,0.7], zero elsewhere.\\
+Data: 60 heads in 65 tosses pushes posterior against the 0.7 boundary.
+
+% -------------------------------------------------------------
+% LECTURE 11
+% -------------------------------------------------------------
+
+\section*{Bayes' Theorem Review}
+
+\(
+P(H|D)=\frac{P(D|H)P(H)}{P(D)}.
+\)
+
+\subsection*{Disease Screening Example}
+
+Data: positive test.\\
+Priors: \( P(H^+)=0.005,\; P(H^-)=0.995 \).\\
+Likelihoods: \( P(T^+|H^+)=0.99,\; P(T^+|H^-)=0.02 \).
+
+Total probability: \\
+\(
+P(T^+)=0.99(0.005)+0.02(0.995)=0.02485.
+\)
+
+Posterior: \\
+\(
+P(H^+|T^+)=0.199,\quad P(H^-|T^+)=0.801.
+\)
+
+\subsection*{Likelihood Table}
+
+\(
+\begin{array}{lcc}
+H & P(T^+|H) & P(T^-|H)\\
+\hline
+H^+ & 0.99 & 0.01\\
+H^- & 0.02 & 0.98\\
+\end{array}
+\)
+
+\subsection*{Bayesian Update Table}
+
+\resizebox{\linewidth}{!}{
+\(
+\begin{array}{lcccc}
+H & P(H) & P(T^+|H) & P(T^+|H)P(H) & P(H|T^+)\\
+\hline
+H^+ & 0.005 & 0.99 & 0.00495 & 0.199\\
+H^- & 0.995 & 0.02 & 0.01990 & 0.801\\
+\text{Total} & 1 & & 0.02485 & 1\\
+\end{array}
+\)
+}
+
+\subsection*{Conjugate Priors Summary}
+
+Posterior has same form as prior if prior–likelihood pair is conjugate.\\
+Examples: Beta–Bernoulli, Beta–Binomial, Gamma–Exponential, Normal–Normal.
+
+\subsection*{Strong Priors}
+
+If prior assigns zero probability to a region, posterior will also assign zero regardless of data.
+
+\subsection*{Two-Parameter Likelihood Example (Malaria)}
+
+Data counts: \\
+S carriers: 2 developed, 13 not.\\
+N non-carriers: 14 developed, 1 not.\\
+
+Likelihood: \\
+\(
+P(data|\theta_S,\theta_N)=c\,\theta_S^2(1-\theta_S)^{13}\theta_N^{14}(1-\theta_N).
+\)
+
+Hypotheses: grid over \( \theta_S,\theta_N\in\{0,0.2,0.4,0.6,0.8,1\} \).
+
+\subsection*{Posterior Table Interpretation}
+
+Posterior mass concentrates near \( \theta_S=0.2,\theta_N=0.8 \).\\
+Measures like \( P(\theta_N-\theta_S>0.5|data) \) computed by summing posterior entries.
+
+\subsection*{Probability Intervals}
+
+A \( p \)-probability interval \([a,b]\) satisfies \( P(a\le \theta\le b)=p \).\\
+Symmetric: from quantiles \( q_{(1-p)/2} \) to \( q_{(1+p)/2} \).\\
+Posterior intervals narrower than prior intervals.
+
+% -------------------------------------------------------------
+% LECTURE 12
+% -------------------------------------------------------------
+
+\section*{Frequentist Statistics}
+
+Probability = long-run frequency.\\
+Valid probabilities: outcomes of repeatable experiments.\\
+Invalid: prior probabilities on parameters.
+
+\subsection*{Statistics}
+
+A statistic is any function of the data not depending on unknown parameters.\\
+Examples: mean, median, MLE.
+
+\subsection*{NHST Ingredients}
+
+Null \( H_0 \), alternative \( H_A \).\\
+Test statistic \( x \).\\
+Rejection region: reject \( H_0 \) if \( x\in R \).\\
+Null distribution: \( f(x|H_0) \).\\
+Significance level \( \alpha=P(\text{reject }H_0|H_0\text{ true}) \).
+
+\subsection*{Coin Toss Rejection Region}
+
+For \( n=10 \), \( x=\# \text{heads} \).\\
+Example: two-sided region uses symmetric tail probabilities summing to \( \alpha \).
+
+\subsection*{z-Tests and p-Values}
+
+Data: \( x_1,\ldots,x_n \sim N(\mu,\sigma^2) \) with known \( \sigma \).\\
+Test: \( H_0:\mu=\mu_0 \).\\
+Test statistic: \\
+\(
+z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}.
+\)\\
+Null distribution: \( z\sim N(0,1) \).\\
+Right-sided p-value: \( p=P(Z>z) \).\\
+Two-sided p-value: \( p=P(|Z|>z) \).\\
+Reject if \( p\le \alpha \).
+
+\subsection*{Example: One-Sided z-Test}
+
+Data: \( \bar{x}=112 \), \( n=9 \), \( \sigma=15 \).\\
+\( z=\frac{112-100}{15/3}=2.4. \)\\
+Critical value: \( z_{0.05}=1.64 \).\\
+p-value: \( 0.008 \).\\
+Decision: reject \( H_0 \).
+
+\subsection*{Two-Sided Example}
+
+\( H_0:\mu=5 \). Data: \( \bar{x}=6.25, n=64, \sigma=10 \).\\
+\(
+z=\frac{6.25-5}{10/8}=1.
+\)\\
+Rejection region: \( |z|>1.96 \).\\
+p-value: \( P(|Z|>1)=0.32 \).\\
+Decision: do not reject \( H_0 \).
+
+\subsection*{Binomial NHST Example}
+
+For 8 tosses and 6 heads: test \( H_0:\theta=0.5 \) vs \( H_A:\theta=0.6 \).\\
+Right-sided rejection region: \{7,8\}.\\
+Since 6 is not in region: do not reject.\\
+Reverse hypotheses give left-sided region \{0,1,2\}; still no rejection.
+
+\section*{Lecture 13: NHST Basics}
+
+\subsection*{Null Hypothesis Significance Testing}
+Simple hypotheses fully specify the sampling distribution.\\
+Composite hypotheses specify only a range of parameter values.\\
+Test statistic \(x\) compared to null distribution \(f(x|H_0)\).\\
+Rejection region determined by \(\alpha\).\\
+p-value = \(P(\text{data as or more extreme than } x | H_0)\).
+
+\subsection*{p-Values and Rejection Regions}
+Right-sided: \(p=P(X \ge x|H_0)\).\\
+Left-sided: \(p=P(X \le x|H_0)\).\\
+Two-sided: \(p=P(|X|\ge |x| | H_0)\).\\
+Reject when \(p \le \alpha\).
+
+\subsection*{Extreme Data Example}
+If \(x\) lies in the right tail beyond cutoff \(c_\alpha\), reject \(H_0\).\\
+If \(x\) lies left of cutoff in two-sided test: reject.\\
+Test statistic location vs. red region determines rejection.
+
+\subsection*{Coin Example (8 flips, 6 heads)}
+\(H_0:\theta=0.5,\; H_A:\theta=0.6\).\\
+Binomial probabilities used for p-value computation.\\
+Right-sided test uses \(P(X\ge 6|H_0)\).\\
+Reverse roles for testing \(H_0:\theta=0.6\).
+
+\subsection*{Type I/II Errors and Power}
+Type I error: reject \(H_0\) when true. Probability = \(\alpha\).\\
+Type II error: fail to reject \(H_0\) when false.\\
+Power = \(1 - P(\text{Type II error})\).\\
+Power = \(P(\text{reject } H_0 | H_A)\).
+
+\subsection*{Table Example (Binomial)}
+Rejection region in red corresponds to \(\alpha = P(x\in R|H_0)\).\\
+Power computed by summing \(P(x\in R|H_A)\).
+
+
+\section*{Lecture 14: z and t Tests}
+
+\subsection*{Sample Mean Distribution}
+For \(X_i\sim N(\mu,\sigma^2)\):\\
+\(E(\bar{x})=\mu\), \(\text{Var}(\bar{x})=\sigma^2/n\).\\
+Standardized mean:\\
+\(
+z=\frac{\bar{x}-\mu}{\sigma/\sqrt{n}}
+\sim N(0,1).
+\)
+
+\subsection*{Two-Sided z-Test}
+Test \(H_0:\mu=\mu_0\). Known \(\sigma\).\\
+Reject if \(|z|\ge z_{\alpha/2}\).\\
+
+\subsection*{Example}
+Data: 2,4,4,10. \(\bar{x}=5,\; \sigma=4\).\\
+\(
+z=\frac{5-0}{4/2}=2.5.
+\)\\
+Reject \(H_0\) since \(2.5>1.96\).
+
+\subsection*{Chi-Square Review}
+If \(Z_i \sim N(0,1)\) independent:\\
+\(
+Q=\sum_{i=1}^{k} Z_i^2 \sim \chi^2(k).
+\)
+
+\subsection*{Sample Variance Distribution}
+\(
+S^2=\frac{1}{n-1}\sum (X_i-\bar{X})^2.
+\)\\
+\(
+(n-1)S^2/\sigma^2 \sim \chi^2(n-1).
+\)
+
+\subsection*{Variance Test Example}
+Compute \(P(S^2>12)\) by transforming via chi-square.
+
+\subsection*{t-Test: Unknown Mean and Variance}
+Data \(X_i\sim N(\mu,\sigma^2)\).\\
+Test statistic:\\
+\(
+t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}},
+\quad s^2=\frac{1}{n-1}\sum (X_i-\bar{x})^2.
+\)\\
+Null distribution: \(T\sim t(n-1)\).
+
+\subsection*{Example}
+Data: 2,4,4,10. \(s^2=12\).\\
+\(
+t=\frac{5-0}{\sqrt{12}/2}=5/\sqrt{3}.
+\)\\
+p-value computed via \(t_3\). Do not reject if \(p>\alpha\).
+
+\subsection*{Special Normal Properties}
+If jointly normal and uncorrelated → independent.
+
+\subsection*{Central Limit Theorem}
+For large \(n\), sample mean approx. normal regardless of distribution.
+
+\section*{Lecture 15: Sufficient Statistics}
+
+\subsection*{Definition}
+Statistic \(Y=h(X_1,\ldots,X_n)\) is sufficient for \(\theta\) if conditional
+distribution of any statistic \(Z\) given \(Y=y\) does not depend on \(\theta\).
+
+\subsection*{Fisher–Neyman Factorization}
+Joint density factored as:\\
+\(
+f(x_1,\ldots,x_n|\theta)
+= g_1(h(x);\theta)\, g_2(x).
+\)\\
+Then \(Y=h(x)\) sufficient.
+
+\subsection*{Bernoulli Example}
+\(
+f(x|\theta)=\theta^{\sum x_i}(1-\theta)^{n-\sum x_i}.
+\)\\
+Sufficient statistic: \(Y=\sum X_i\).
+
+\subsection*{Poisson Example}
+\(
+p(x_i|\theta)=\frac{\theta^{x_i}e^{-\theta}}{x_i!}.
+\)\\
+Joint pmf factors with sufficient stat \(Y=\sum X_i\).
+
+\subsection*{Normal Example}
+Sample from \(N(\mu,\sigma^2)\).\\
+Joint pdf shows dependence on \(\sum X_i\).\\
+Thus \(T=\sum X_i\) sufficient for \(\mu\).\\
+
+\subsection*{Beta–Bernoulli Updating Table}
+Posterior Beta(a+1,b) for success, Beta(a,b+1) for failure.\\
+Sequential update table interprets sufficiency of count of successes/failures.\\
+
+\subsection*{Combined Experiments}
+Total successes and failures across experiments sufficient for posterior.\\
+
+\section*{Lecture 16: Normal Dist. (Part 1)}
+
+\subsection*{Normal/Gaussian pdf}
+The normal pdf with mean \(\mu\) and variance \(\sigma^2\):\\
+\(
+f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}
+\exp\left(-(x-\mu)^2/(2\sigma^2)\right).
+\)
+
+\subsection*{Sample Mean Distribution}
+If \(X_i\sim N(\mu,\sigma^2)\) i.i.d.:\\
+\(
+\bar{X}=\frac{1}{n}\sum_{i=1}^n X_i
+\sim N(\mu,\sigma^2/n).
+\)\\
+Mean of \(\bar{X}\) is \(\mu\). Variance is \(\sigma^2/n\).\\
+
+\subsection*{Use in z-tests}
+Test statistic for known variance:\\
+\(
+z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}
+\sim N(0,1)\text{ under }H_0.
+\)
+
+\subsection*{Sample Variance Distribution}
+Sample variance:\\
+\(
+S^2=\frac{1}{n-1}\sum_{i=1}^n (X_i-\bar{X})^2.
+\)\\
+Chi-square distribution:\\
+\(
+(n-1)S^2/\sigma^2\sim \chi^2(n-1).
+\)
+
+\subsection*{Variance Tests}
+Test statistic for known mean/unknown variance:\\
+\(
+Q=(n-1)S^2/\sigma_0^2.
+\)\\
+Reject \(H_0\) when \(Q\) lies in the rejection region from the \(\chi^2\) distribution.
+
+\subsection*{Special Normal Properties}
+If \((X,Y)\) are jointly normal and uncorrelated, then they are independent.\\
+Joint pdf factorizes when covariance \(=0\).\\
+
+\subsection*{Central Limit Theorem (Preview)}
+For large \(n\), regardless of original distribution:\\
+\(
+\bar{X}\approx N(\mu,\sigma^2/n)
+\) by CLT.\\
+Used when population is not originally normal.\\
+
+\section*{Lecture 17: Normal Dist. (Part 2)}
+
+\subsection*{Sample Mean}
+If \(X_i\sim N(\mu,\sigma^2)\):\\
+\(
+\bar{X}\sim N(\mu,\sigma^2/n).
+\)
+
+\subsection*{z-Test Review}
+Test statistic when \(\sigma\) known:\\
+\(
+z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}.
+\)
+
+\subsection*{Sample Variance}
+\(
+S^2=\frac{1}{n-1}\sum (X_i-\bar{X})^2.
+\)\\
+\(
+(n-1)S^2/\sigma^2 \sim \chi^2(n-1).
+\)
+
+\subsection*{Variance Tests}
+\(
+Q=(n-1)S^2/\sigma_0^2.
+\)\\
+Reject based on chi-square critical values.
+
+\subsection*{t-Test Review}
+Unknown \(\sigma\):\\
+\(
+t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}},\quad T\sim t(n-1).
+\)
+
+\subsection*{Normal Independence Property}
+Jointly normal + zero covariance \(\Rightarrow\) independent.
+
+\subsection*{Central Limit Theorem}
+For iid with mean \(\mu\) and variance \(\sigma^2\):\\
+\(
+\bar{X}\approx N(\mu,\sigma^2/n)\text{ for large }n.
+\)
+
+
+\section*{Lecture 18: Finite Populations \& More NHST}
+
+\subsection*{Finite Population Sampling}
+Population size \(N\), sample size \(n\).\\
+Without replacement variance adjusted by finite population factor.
+
+\subsection*{Hypergeometric Structure}
+Sampling without replacement leads to hypergeometric pmf.\\
+When \(n\ll N\): hypergeometric \(\approx\) binomial.
+
+\subsection*{Variance of Sample Mean}
+Finite population correction:\\
+\(
+\text{Var}(\bar{X})=\frac{\sigma^2}{n}\left(\frac{N-n}{N-1}\right).
+\)
+
+\subsection*{Tests for Normal Variance}
+\(
+(n-1)S^2/\sigma_0^2 \sim \chi^2(n-1)
+\) used for two-sided variance tests.
+
+\subsection*{Bernoulli Hypothesis Tests}
+For binomial \(X\sim \text{Bin}(n,p)\).\\
+Right-sided, left-sided, or two-sided using binomial tail sums.
+
+\subsection*{Example: Defective Chips}
+Test \(p\le 0.02\). If 10 of 300 defective:\\
+Compute \(P(X\ge 10 | p=0.02)\).\\
+If \(> \alpha\): fail to reject claim.
+
+\subsection*{Example: Proofreaders}
+Counts of disagreements treated as Bernoulli.\\
+Hypothesis test compares difference of error rates.
+
+
+\section*{Lecture 19: Bootstrapping}
+
+\subsection*{Bootstrap Idea}
+Use sample as empirical population.\\
+Resample with replacement to approximate distribution of statistic.
+
+\subsection*{Bootstrap Replicates}
+For each bootstrap sample compute statistic \(T^*\).\\
+Bootstrap distribution approximates sampling distribution of \(T\).
+
+\subsection*{Bootstrap Mean}
+\(X_1,\ldots,X_n\) sample.\\
+Bootstrap sample: draw \(n\) items with replacement from data.\\
+Compute \(\bar{X}^*\). Distribution of \(\bar{X}^*\) approximates true distribution.
+
+\subsection*{Law of Large Numbers}
+Weak LLN: \(\bar{X}\to \mu\) in probability.\\
+Strong LLN: \(\bar{X}\to\mu\) almost surely.
+
+\subsection*{Chebyshev Inequality}
+\(
+P(|X-\mu|\ge k\sigma)\le 1/k^2.
+\)
+
+\subsection*{Finite vs. Infinite Populations}
+If sampling without replacement from large \(N\), bootstrap approximates independence.\\
+If \(n\) not small relative to \(N\), must treat dependence explicitly.
+
+
+\section*{Lecture 20: Regression}
+
+\subsection*{Model}
+Bivariate data \((x_i,y_i)\).\\
+Model: \(y_i=f(x_i)+E_i\).\\
+Goal: predict \(y\) from \(x\).
+
+\subsection*{Total Squared Error}
+\(
+E=\sum (y_i - f(x_i))^2.
+\)\\
+Least squares picks \(f\) minimizing error.
+
+\subsection*{Simple Linear Regression}
+Model:\\
+\(
+y_i=ax_i + b + E_i,\quad E_i\sim N(0,\sigma^2).
+\)\\
+Find \(a,b\) minimizing squared error.
+
+\subsection*{Least Squares Estimators}
+Minimize:\\
+\(
+\sum (y_i - ax_i - b)^2.
+\)\\
+Closed forms for \(a,b\) obtained from normal equations.
+
+\subsection*{Polynomial Regression}
+Model:\\
+\(
+y_i=ax_i^2 + bx_i + c + E_i.
+\)\\
+Least squares chooses \(a,b,c\).
+
+\subsection*{General Regression}
+Fit higher-order polynomials or other functions.\\
+All minimize same error quantity \(\sum (y_i-f(x_i))^2\).
+
+\section*{Lecture 21: Goodness of Fit}
+
+\subsection*{Goal}
+Test whether observed data follow a specified pmf \(p_i\).\\
+Null: \(H_0: P(Y=i)=p_i\). Alternative: \(H_1\): not all equal.
+
+\subsection*{Counts}
+Let \(X_i\) be the count of observations in category \(i\).\\
+Under \(H_0\): \(E[X_i]=np_i\), \(\text{Var}(X_i)=np_i(1-p_i)\approx np_i\).
+
+\subsection*{Test Statistic}
+\(
+T=\sum_{i=1}^k (X_i-np_i)^2/(np_i).
+\)\\
+Large \(T\) suggests model mismatch.
+
+\subsection*{Asymptotic Distribution}
+For large \(n\):\\
+\(
+T\sim \chi^2(k-1).
+\)\\
+Reject \(H_0\) if \(T\ge \chi^2_{k-1,\alpha}\).\\
+
+\subsection*{p-Value}
+\(
+p\text{-value}=P(T\ge t)\approx P(\chi^2_{k-1}\ge t).
+\)
+
+\subsection*{Unknown Parameters}
+If \(p_i(\theta)\) depends on parameter \(\theta\), estimate \(\hat{\theta}\) first.\\
+Replace \(p_i\) with \(\hat{p}_i=p_i(\hat{\theta})\).\\
+Degrees of freedom become \(k-1-m\) where \(m\) parameters estimated.
+
+\subsection*{Poisson Example}
+Regions defined by counts 0,1,2–3,4–5,\(>5\).\\
+\(
+p_1=e^{-\lambda},\;
+p_2=\lambda e^{-\lambda},\;
+p_3=(e^{-\lambda}\lambda^2/2)+(e^{-\lambda}\lambda^3/6),\\
+p_4=(e^{-\lambda}\lambda^4/24)+(e^{-\lambda}\lambda^5/120),\;
+p_5=1-p_1-p_2-p_3-p_4.
+\)\\
+Estimate \(\hat{\lambda}=\bar{Y}\).\\
+Statistic:\\
+\(
+T=\sum (X_i-n\hat{p}_i)^2/(n\hat{p}_i).
+\)
+
+\subsection*{Independence Test}
+Categorical variables \(X\in\{1,\ldots,r\}\), \(Y\in\{1,\ldots,s\}\).\\
+Null: \(P_{ij}=p_i q_j\).\\
+Observed counts \(N_{ij}\).\\
+Row totals \(N_i=\sum_j N_{ij}\).\\
+Column totals \(M_j=\sum_i N_{ij}\).\\
+Estimates:\\
+\(
+\hat{p}_i=N_i/n,\quad \hat{q}_j=M_j/n.
+\)
+
+\subsection*{Independence Test Statistic}
+\(
+T=\sum_{i=1}^r\sum_{j=1}^s (N_{ij}-n\hat{p}_i\hat{q}_j)^2/(n\hat{p}_i\hat{q}_j).
+\)\\
+Asymptotically:\\
+\(
+T\sim \chi^2((r-1)(s-1)).
+\)
+
+
+\section*{Lecture 22: Weighted Least Squares}
+
+\subsection*{Weighted Least Squares Setup}
+Model \(Y_i=A+Bx_i+E_i\).\\
+Weights \(w_i\) used when variances differ.\\
+Minimize:\\
+\(
+\sum_i w_i (Y_i-A-Bx_i)^2.
+\)
+
+\subsection*{Normal Equations}
+\(
+\sum_i w_i Y_i = A\sum_i w_i + B\sum_i w_i x_i,\\
+\sum_i w_i x_i Y_i = A\sum_i w_i x_i + B\sum_i w_i x_i^2.
+\)\\
+Solve for \(A,B\).
+
+\subsection*{Variance Structure}
+If \(\text{Var}(Y_i)=\sigma^2/w_i\) or \(\sigma^2/(\alpha x_i)\), use weights \(w_i\propto 1/\text{Var}(Y_i)\).
+
+\subsection*{MLE Connection}
+Assuming normal errors:\\
+\(
+f(Y_1,\ldots,Y_n)=\prod \frac{\sqrt{w_i}}{\sqrt{2\pi}\sigma}\exp(-(w_i/2\sigma^2)(Y_i-\alpha-\beta x_i)^2).
+\)\\
+MLE of \((\alpha,\beta)\) equals weighted least squares solution.
+
+\subsection*{Example}
+Solve system:\\
+\(
+104.22=5.34A+10B,\\
+277.9=10A+41B.
+\)\\
+Solution (from slides): \(A=12.561,\; B=3.714\).
+
+\subsection*{Polynomial Regression}
+Model:\\
+\(
+Y_i=B_0+B_1 x_i + B_2 x_i^2+\cdots+B_r x_i^r + E_i.
+\)\\
+Least squares minimizes:\\
+\(
+\sum_{i=1}^n (Y_i-B_0-B_1 x_i-\cdots-B_r x_i^r)^2.
+\)
+
+\subsection*{Linear MMSE Estimator}
+For jointly normal \(X,Y\): optimal estimator linear.\\
+Estimator:\\
+\(
+Y=ax+b,\quad a=\text{Cov}(Y,X)/\sigma_X^2,\quad b=E[Y]-aE[X].
+\)\\
+For normal variables:\\
+\(
+E(Y|X)=aX+b
+\)
+equals the optimum MMSE estimator.\\

@@ -1,93 +1,51 @@
-\section{Lecture 6: Bayesian Updating }
+\section*{Lecture 9: Beta Distribution }
+Beta(a,b) pdf uses \(f(\theta)=c\,\theta^{a-1}(1-\theta)^{b-1}\) with \(c=\frac{(a+b-1)!}{(a-1)!(b-1)!}\).\\
+Beta shapes are controlled by \(a\) and \(b\), symmetric when \(a=b\).\\
+Support is \(0\le\theta\le1\).\\
+Beta is the conjugate prior for binomial data.
 
 
-\subsection*{Learning from Data Example}
-A disease has prevalence \(P(H^+) = 0.005\).  
-A screening test has 2\% false positives and 1\% false negatives.
+\subsection*{Beta Priors}
+Binomial likelihood for \(s\) successes, \(f\) failures is \(p(x|\theta)\propto\theta^{s}(1-\theta)^{f}\).\\
+Posterior becomes \(f(\theta|x)\propto\theta^{a+s-1}(1-\theta)^{b+f-1}\).\\
+Thus posterior is Beta(a+s,b+f).\\
+Order of successes does not affect the posterior.
 
-We observe a \textbf{positive test result} \(T^+\).
 
-We want \(P(H^+|T^+)\) and \(P(H^-|T^+)\).
+\subsection*{Example: Beta(5,5)}
+Prior Beta(5,5) with data \(s=6,\ f=4\) gives posterior \(f(\theta|x)\propto\theta^{10}(1-\theta)^{8}\).\\
+Posterior is Beta(11,9).\\
+Sequential data \(S S S F F S S S F F\) yields same update.
 
-\subsection*{Bayes’ Theorem}
+
+\subsection*{Predictive Prob.}
+Posterior Beta(a',b') has predictive success probability \(\int_{0}^{1}\theta\,f(\theta|x)d\theta\).\\
+This equals mean \(\frac{a'}{a'+b'}\).\\
+Example: Beta(11,9) gives \(\frac{11}{20}\).\\
+Integral relates to Beta(a'+1,b').
+
+
+\subsection*{Conjugate Update}
+Conjugate update rule: \(a\to a+s,\ b\to b+f\).\\
+Beta prior remains Beta after observing binomial data.\\
+Example: Beta(6,8) with 2 heads, 5 tails becomes Beta(8,13).
+
+
+\subsection*{Bayes Table (Continuous)}
+General update uses\\ \(f(\theta|x)=\frac{p(x|\theta)f(\theta)}{\int_{0}^{1}p(x|\theta)f(\theta)d\theta}\).\\
+
+\resizebox{\linewidth}{!}{
 \(
-P(H|D)=\frac{P(D|H)\,P(H)}{P(D)} \\
-P(D)=\sum_i P(D|H_i)P(H_i)
-\)
-
-% \subsection*{Tree Representation}
-% \(
-% \begin{array}{rcl}
-% P(T^+|H^+) &=& 0.99,\\
-% P(T^-|H^+) &=& 0.01,\\
-% P(T^+|H^-) &=& 0.02,\\
-% P(T^-|H^-) &=& 0.98.
-% \end{array}
-% \) \\
-Total probability: \\
-\(
-P(T^+)=0.99(0.005)+0.02(0.995)\\=0.02485.
-\)
-
-\subsection*{Posterior Probabilities}
-\(
-P(H^+|T^+)=\frac{0.99\cdot0.005}{0.02485}=0.199,\quad \\
-P(H^-|T^+)=0.801.
-\) \\
-A positive test increases the probability of disease but it remains below 50\%.
-
-\subsection*{Terminology}
-Data \(D\): observed evidence (here \(T^+\)). \\
-Hypotheses \(H\): \(H^+\) (has disease), \(H^-\). \\
-Likelihoods \(P(D|H)\): probability of data given hypothesis. \\
-Priors \(P(H)\): belief before seeing data. \\
-Posteriors \(P(H|D)\): belief after observing data.
-
-
-
-\subsection*{Likelihood Table}
-\(
-\begin{array}{lcc}
-\text{Hypothesis} & P(T^+|H) & P(T^-|H) \\
+\begin{array}{lccc}
+\text{Quantity} & \text{Prior} & \text{Likelihood} & \text{Posterior}\\
 \hline
-H^+ & 0.99 & 0.01\\
-H^- & 0.02 & 0.98
+\theta & f(\theta) & p(x|\theta) & f(\theta|x)\\
+\text{Total} & 1 &  & 1\\
 \end{array}
+\)}
+
+\(f(\theta|x)=\frac{p(x|\theta)f(\theta)}{\int_{0}^{1}p(x|\theta)f(\theta)d\theta}
 \)
 
-\subsection*{Bayesian Update Table}
-\resizebox{\linewidth}{!}{%
-\(
-\begin{array}{lcccc}
-H & P(H) & P(T^+|H) & P(T^+|H)P(H) & P(H|T^+)\\
-\hline
-H^+ & 0.005 & 0.99 & 0.00495 & 0.199\\
-H^- & 0.995 & 0.02 & 0.01990 & 0.801\\
-\text{Total} & 1 &  & 0.02485 & 1
-\end{array}
-\)
-}
-
-
-
-
-\subsection*{Law of Total Probability}
-\(
-P(D_1)=\sum_i P(D_1|H_i)P(H_i) \\
-P(D_2|D_1)=\sum_i P(D_2|H_i)P(H_i|D_1).
-\)
-
-\subsection*{Probabilistic Prediction}
-After observing \(D_1=5\),\\
-\(
-P(D_2=4|D_1=5) \\ =\sum_i P(D_2=4|H_i)P(H_i|D_1)=0.124.
-\)\\
-This allows computing the probability of future outcomes given past data.
-
-\subsection*{Iterated Updates in Odds Form}
-For independent data \(D_1,D_2\):
-\(
-O(H|D_1,D_2)=O(H)\cdot\mathrm{BF}_1\cdot\mathrm{BF}_2,
-\)
-where the Bayes factor \\ \(\mathrm{BF}_i=P(D_i|H)/P(D_i|H^c)\).
-
+Evidence term:\\ \(p(x)=\int_{0}^{1}p(x|\theta)f(\theta)d\theta\).\\
+Predictive:\\ \(p(x_{\text{next}}|x)=\int_{0}^{1}p(x_{\text{next}}|\theta)f(\theta|x)d\theta\).
