@@ -1,0 +1,1228 @@
+
+\section*{Conjugate Priors: Beta and Normal}
+
+A prior is conjugate to a likelihood when the posterior has the same distribution family. \\
+Posterior is proportional to (prior \times likelihood).
+
+\subsection*{Continuous Prior, Discrete Data Example}
+
+Prior: \( f(\theta)=2\theta \).\\
+Likelihood for one head: \( p(x=1|\theta)=\theta \).\\
+
+Bayes numerator: \( 2\theta \cdot \theta = 2\theta^2 \).\\
+Normalization constant: \( \int_0^1 2\theta^2\,d\theta = \frac{2}{3} \).\\
+
+Posterior: \( f(\theta|x)=3\theta^2 \).
+
+\subsection*{Continuous Prior, Continuous Data}
+
+Bayes rule for continuous case: \\
+\(
+f(\theta|x)=\frac{f(x|\theta)f(\theta)}{\int f(x|\theta)f(\theta)\,d\theta}.
+\)
+
+\subsection*{Normal Prior and Normal Likelihood}
+
+Likelihood: \( x_i \sim N(\theta,\sigma^2) \). \\
+Prior: \( \theta \sim N(\mu_{prior},\sigma_{prior}^2) \).
+Posterior: \( \theta \sim N(\mu_{post},\sigma_{post}^2) \).
+Update formulas: 
+\(
+a=\frac{1}{\sigma_{prior}^2},\quad b=\frac{n}{\sigma^2}.
+\)\\
+\(
+\mu_{post}=\frac{a\mu_{prior}+bx}{a+b},\quad
+\sigma_{post}^2=\frac{1}{a+b}.
+\)
+
+\subsection*{Example: One Normal Observation}
+
+Data: \( x=2 \). Prior: \( N(4,2^2) \). Likelihood variance: \( 3^2 \).
+\(
+a=\frac{1}{4},\; b=\frac{1}{9},\; a+b=\frac{13}{36}.
+\)\\
+\(
+\mu_{post}=\frac{1+\frac{2}{9}}{13/36}=\frac{44}{13}=3.3846.
+\)\\
+\(
+\sigma_{post}^2=\frac{36}{13}=2.7692.
+\)
+
+\subsection*{Normal/Normal Example}
+
+Basketball free throw prior: \( \theta\sim N(75,36) \).\\
+Data: \( x=85 \). Likelihood variance \( 16 \).\\
+\(
+a=\frac{1}{36},\; b=\frac{1}{16}.
+\)\\
+\(
+\mu_{post}=81.9,\; \sigma_{post}^2=11.1.
+\)
+
+\subsection*{Conjugate Prior Table}
+
+\resizebox{\linewidth}{!}{
+\(
+\begin{array}{lccc}
+\text{Model} & \text{Prior} & \text{Likelihood} & \text{Posterior}\\
+\hline
+\text{Bernoulli} & beta(a,b) & \theta^x(1-\theta)^{1-x} & beta(a+x,b+1-x)\\
+\text{Binomial} & beta(a,b) & \theta^x(1-\theta)^{N-x} & beta(a+x,b+N-x)\\
+\text{Geometric} & beta(a,b) & \theta(1-\theta)^x & beta(a+x,b+1)\\
+\text{Normal} & N(\mu_{prior},\sigma_{prior}^2) & N(\theta,\sigma^2) & N(\mu_{post},\sigma_{post}^2)\\
+\end{array}
+\)
+}
+
+\subsection*{Likelihood Principle}
+
+If \( f(x_1|\theta) \propto f(x_2|\theta) \) then the posteriors are identical.\\
+Scale factors in likelihood do not affect \( f(\theta|x) \).
+
+\subsection*{Strong Prior Example}
+
+Prior: uniform on (0,0.7], zero elsewhere.\\
+Data: 60 heads in 65 tosses pushes posterior against the 0.7 boundary.
+
+% -------------------------------------------------------------
+% LECTURE 11
+% -------------------------------------------------------------
+
+\section*{Bayes' Theorem Review}
+
+\(
+P(H|D)=\frac{P(D|H)P(H)}{P(D)}.
+\)
+
+\subsection*{Disease Screening Example}
+
+Data: positive test.\\
+Priors: \( P(H^+)=0.005,\; P(H^-)=0.995 \).\\
+Likelihoods: \( P(T^+|H^+)=0.99,\; P(T^+|H^-)=0.02 \).
+
+Total probability: \\
+\(
+P(T^+)=0.99(0.005)+0.02(0.995)=0.02485.
+\)
+
+Posterior: \\
+\(
+P(H^+|T^+)=0.199,\quad P(H^-|T^+)=0.801.
+\)
+
+\subsection*{Likelihood Table}
+
+\(
+\begin{array}{lcc}
+H & P(T^+|H) & P(T^-|H)\\
+\hline
+H^+ & 0.99 & 0.01\\
+H^- & 0.02 & 0.98\\
+\end{array}
+\)
+
+\subsection*{Bayesian Update Table}
+
+\resizebox{\linewidth}{!}{
+\(
+\begin{array}{lcccc}
+H & P(H) & P(T^+|H) & P(T^+|H)P(H) & P(H|T^+)\\
+\hline
+H^+ & 0.005 & 0.99 & 0.00495 & 0.199\\
+H^- & 0.995 & 0.02 & 0.01990 & 0.801\\
+\text{Total} & 1 & & 0.02485 & 1\\
+\end{array}
+\)
+}
+
+\subsection*{Conjugate Priors Summary}
+
+Posterior has same form as prior if prior–likelihood pair is conjugate.\\
+Examples: Beta–Bernoulli, Beta–Binomial, Gamma–Exponential, Normal–Normal.
+
+\subsection*{Strong Priors}
+
+If prior assigns zero probability to a region, posterior will also assign zero regardless of data.
+
+\subsection*{Two-Parameter Likelihood Example (Malaria)}
+
+Data counts: \\
+S carriers: 2 developed, 13 not.\\
+N non-carriers: 14 developed, 1 not.\\
+
+Likelihood: \\
+\(
+P(data|\theta_S,\theta_N)=c\,\theta_S^2(1-\theta_S)^{13}\theta_N^{14}(1-\theta_N).
+\)
+
+Hypotheses: grid over \( \theta_S,\theta_N\in\{0,0.2,0.4,0.6,0.8,1\} \).
+
+\subsection*{Posterior Table Interpretation}
+
+Posterior mass concentrates near \( \theta_S=0.2,\theta_N=0.8 \).\\
+Measures like \( P(\theta_N-\theta_S>0.5|data) \) computed by summing posterior entries.
+
+\subsection*{Probability Intervals}
+
+A \( p \)-probability interval \([a,b]\) satisfies \( P(a\le \theta\le b)=p \).\\
+Symmetric: from quantiles \( q_{(1-p)/2} \) to \( q_{(1+p)/2} \).\\
+Posterior intervals narrower than prior intervals.
+
+% -------------------------------------------------------------
+% LECTURE 12
+% -------------------------------------------------------------
+
+\section*{Frequentist Statistics}
+
+Probability = long-run frequency.\\
+Valid probabilities: outcomes of repeatable experiments.\\
+Invalid: prior probabilities on parameters.
+
+\subsection*{Statistics}
+
+A statistic is any function of the data not depending on unknown parameters.\\
+Examples: mean, median, MLE.
+
+\subsection*{NHST Ingredients}
+
+Null \( H_0 \), alternative \( H_A \).\\
+Test statistic \( x \).\\
+Rejection region: reject \( H_0 \) if \( x\in R \).\\
+Null distribution: \( f(x|H_0) \).\\
+Significance level \( \alpha=P(\text{reject }H_0|H_0\text{ true}) \).
+
+\subsection*{Coin Toss Rejection Region}
+
+For \( n=10 \), \( x=\# \text{heads} \).\\
+Example: two-sided region uses symmetric tail probabilities summing to \( \alpha \).
+
+\subsection*{z-Tests and p-Values}
+
+Data: \( x_1,\ldots,x_n \sim N(\mu,\sigma^2) \) with known \( \sigma \).\\
+Test: \( H_0:\mu=\mu_0 \).\\
+Test statistic: \\
+\(
+z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}.
+\)\\
+Null distribution: \( z\sim N(0,1) \).\\
+Right-sided p-value: \( p=P(Z>z) \).\\
+Two-sided p-value: \( p=P(|Z|>z) \).\\
+Reject if \( p\le \alpha \).
+
+\subsection*{Example: One-Sided z-Test}
+
+Data: \( \bar{x}=112 \), \( n=9 \), \( \sigma=15 \).\\
+\( z=\frac{112-100}{15/3}=2.4. \)\\
+Critical value: \( z_{0.05}=1.64 \).\\
+p-value: \( 0.008 \).\\
+Decision: reject \( H_0 \).
+
+\subsection*{Two-Sided Example}
+
+\( H_0:\mu=5 \). Data: \( \bar{x}=6.25, n=64, \sigma=10 \).\\
+\(
+z=\frac{6.25-5}{10/8}=1.
+\)\\
+Rejection region: \( |z|>1.96 \).\\
+p-value: \( P(|Z|>1)=0.32 \).\\
+Decision: do not reject \( H_0 \).
+
+\subsection*{Binomial NHST Example}
+
+For 8 tosses and 6 heads: test \( H_0:\theta=0.5 \) vs \( H_A:\theta=0.6 \).\\
+Right-sided rejection region: \{7,8\}.\\
+Since 6 is not in region: do not reject.\\
+Reverse hypotheses give left-sided region \{0,1,2\}; still no rejection.
+
+\section*{Lecture 13: NHST Basics}
+
+\subsection*{Null Hypothesis Significance Testing}
+Simple hypotheses fully specify the sampling distribution.\\
+Composite hypotheses specify only a range of parameter values.\\
+Test statistic \(x\) compared to null distribution \(f(x|H_0)\).\\
+Rejection region determined by \(\alpha\).\\
+p-value = \(P(\text{data as or more extreme than } x | H_0)\).
+
+\subsection*{p-Values and Rejection Regions}
+Right-sided: \(p=P(X \ge x|H_0)\).\\
+Left-sided: \(p=P(X \le x|H_0)\).\\
+Two-sided: \(p=P(|X|\ge |x| | H_0)\).\\
+Reject when \(p \le \alpha\).
+
+\subsection*{Extreme Data Example}
+If \(x\) lies in the right tail beyond cutoff \(c_\alpha\), reject \(H_0\).\\
+If \(x\) lies left of cutoff in two-sided test: reject.\\
+Test statistic location vs. red region determines rejection.
+
+\subsection*{Coin Example (8 flips, 6 heads)}
+\(H_0:\theta=0.5,\; H_A:\theta=0.6\).\\
+Binomial probabilities used for p-value computation.\\
+Right-sided test uses \(P(X\ge 6|H_0)\).\\
+Reverse roles for testing \(H_0:\theta=0.6\).
+
+\subsection*{Type I/II Errors and Power}
+Type I error: reject \(H_0\) when true. Probability = \(\alpha\).\\
+Type II error: fail to reject \(H_0\) when false.\\
+Power = \(1 - P(\text{Type II error})\).\\
+Power = \(P(\text{reject } H_0 | H_A)\).
+
+\subsection*{Table Example (Binomial)}
+Rejection region in red corresponds to \(\alpha = P(x\in R|H_0)\).\\
+Power computed by summing \(P(x\in R|H_A)\).
+
+
+\section*{Lecture 14: z and t Tests}
+
+\subsection*{Sample Mean Distribution}
+For \(X_i\sim N(\mu,\sigma^2)\):\\
+\(E(\bar{x})=\mu\), \(\text{Var}(\bar{x})=\sigma^2/n\).\\
+Standardized mean:\\
+\(
+z=\frac{\bar{x}-\mu}{\sigma/\sqrt{n}}
+\sim N(0,1).
+\)
+
+\subsection*{Two-Sided z-Test}
+Test \(H_0:\mu=\mu_0\). Known \(\sigma\).\\
+Reject if \(|z|\ge z_{\alpha/2}\).\\
+
+\subsection*{Example}
+Data: 2,4,4,10. \(\bar{x}=5,\; \sigma=4\).\\
+\(
+z=\frac{5-0}{4/2}=2.5.
+\)\\
+Reject \(H_0\) since \(2.5>1.96\).
+
+\subsection*{Chi-Square Review}
+If \(Z_i \sim N(0,1)\) independent:\\
+\(
+Q=\sum_{i=1}^{k} Z_i^2 \sim \chi^2(k).
+\)
+
+\subsection*{Sample Variance Distribution}
+\(
+S^2=\frac{1}{n-1}\sum (X_i-\bar{X})^2.
+\)\\
+\(
+(n-1)S^2/\sigma^2 \sim \chi^2(n-1).
+\)
+
+\subsection*{Variance Test Example}
+Compute \(P(S^2>12)\) by transforming via chi-square.
+
+\subsection*{t-Test: Unknown Mean and Variance}
+Data \(X_i\sim N(\mu,\sigma^2)\).\\
+Test statistic:\\
+\(
+t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}},
+\quad s^2=\frac{1}{n-1}\sum (X_i-\bar{x})^2.
+\)\\
+Null distribution: \(T\sim t(n-1)\).
+
+\subsection*{Example}
+Data: 2,4,4,10. \(s^2=12\).\\
+\(
+t=\frac{5-0}{\sqrt{12}/2}=5/\sqrt{3}.
+\)\\
+p-value computed via \(t_3\). Do not reject if \(p>\alpha\).
+
+\subsection*{Special Normal Properties}
+If jointly normal and uncorrelated → independent.
+
+\subsection*{Central Limit Theorem}
+For large \(n\), sample mean approx. normal regardless of distribution.
+
+\section*{Lecture 15: Sufficient Statistics}
+
+\subsection*{Definition}
+Statistic \(Y=h(X_1,\ldots,X_n)\) is sufficient for \(\theta\) if conditional
+distribution of any statistic \(Z\) given \(Y=y\) does not depend on \(\theta\).
+
+\subsection*{Fisher–Neyman Factorization}
+Joint density factored as:\\
+\(
+f(x_1,\ldots,x_n|\theta)
+= g_1(h(x);\theta)\, g_2(x).
+\)\\
+Then \(Y=h(x)\) sufficient.
+
+\subsection*{Bernoulli Example}
+\(
+f(x|\theta)=\theta^{\sum x_i}(1-\theta)^{n-\sum x_i}.
+\)\\
+Sufficient statistic: \(Y=\sum X_i\).
+
+\subsection*{Poisson Example}
+\(
+p(x_i|\theta)=\frac{\theta^{x_i}e^{-\theta}}{x_i!}.
+\)\\
+Joint pmf factors with sufficient stat \(Y=\sum X_i\).
+
+\subsection*{Normal Example}
+Sample from \(N(\mu,\sigma^2)\).\\
+Joint pdf shows dependence on \(\sum X_i\).\\
+Thus \(T=\sum X_i\) sufficient for \(\mu\).\\
+
+\subsection*{Beta–Bernoulli Updating Table}
+Posterior Beta(a+1,b) for success, Beta(a,b+1) for failure.\\
+Sequential update table interprets sufficiency of count of successes/failures.\\
+
+\subsection*{Combined Experiments}
+Total successes and failures across experiments sufficient for posterior.\\
+
+\section*{Lecture 16: Normal Dist. (Part 1)}
+
+\subsection*{Normal/Gaussian pdf}
+The normal pdf with mean \(\mu\) and variance \(\sigma^2\):\\
+\(
+f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}
+\exp\left(-(x-\mu)^2/(2\sigma^2)\right).
+\)
+
+\subsection*{Sample Mean Distribution}
+If \(X_i\sim N(\mu,\sigma^2)\) i.i.d.:\\
+\(
+\bar{X}=\frac{1}{n}\sum_{i=1}^n X_i
+\sim N(\mu,\sigma^2/n).
+\)\\
+Mean of \(\bar{X}\) is \(\mu\). Variance is \(\sigma^2/n\).\\
+
+\subsection*{Use in z-tests}
+Test statistic for known variance:\\
+\(
+z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}
+\sim N(0,1)\text{ under }H_0.
+\)
+
+\subsection*{Sample Variance Distribution}
+Sample variance:\\
+\(
+S^2=\frac{1}{n-1}\sum_{i=1}^n (X_i-\bar{X})^2.
+\)\\
+Chi-square distribution:\\
+\(
+(n-1)S^2/\sigma^2\sim \chi^2(n-1).
+\)
+
+\subsection*{Variance Tests}
+Test statistic for known mean/unknown variance:\\
+\(
+Q=(n-1)S^2/\sigma_0^2.
+\)\\
+Reject \(H_0\) when \(Q\) lies in the rejection region from the \(\chi^2\) distribution.
+
+\subsection*{Special Normal Properties}
+If \((X,Y)\) are jointly normal and uncorrelated, then they are independent.\\
+Joint pdf factorizes when covariance \(=0\).\\
+
+\subsection*{Central Limit Theorem (Preview)}
+For large \(n\), regardless of original distribution:\\
+\(
+\bar{X}\approx N(\mu,\sigma^2/n)
+\) by CLT.\\
+Used when population is not originally normal.\\
+
+\section*{Lecture 17: Normal Dist. (Part 2)}
+
+\subsection*{Sample Mean}
+If \(X_i\sim N(\mu,\sigma^2)\):\\
+\(
+\bar{X}\sim N(\mu,\sigma^2/n).
+\)
+
+\subsection*{z-Test Review}
+Test statistic when \(\sigma\) known:\\
+\(
+z=\frac{\bar{x}-\mu_0}{\sigma/\sqrt{n}}.
+\)
+
+\subsection*{Sample Variance}
+\(
+S^2=\frac{1}{n-1}\sum (X_i-\bar{X})^2.
+\)\\
+\(
+(n-1)S^2/\sigma^2 \sim \chi^2(n-1).
+\)
+
+\subsection*{Variance Tests}
+\(
+Q=(n-1)S^2/\sigma_0^2.
+\)\\
+Reject based on chi-square critical values.
+
+\subsection*{t-Test Review}
+Unknown \(\sigma\):\\
+\(
+t=\frac{\bar{x}-\mu_0}{s/\sqrt{n}},\quad T\sim t(n-1).
+\)
+
+\subsection*{Normal Independence Property}
+Jointly normal + zero covariance \(\Rightarrow\) independent.
+
+\subsection*{Central Limit Theorem}
+For iid with mean \(\mu\) and variance \(\sigma^2\):\\
+\(
+\bar{X}\approx N(\mu,\sigma^2/n)\text{ for large }n.
+\)
+
+
+\section*{Lecture 18: Finite Populations \& More NHST}
+
+\subsection*{Finite Population Sampling}
+Population size \(N\), sample size \(n\).\\
+Without replacement variance adjusted by finite population factor.
+
+\subsection*{Hypergeometric Structure}
+Sampling without replacement leads to hypergeometric pmf.\\
+When \(n\ll N\): hypergeometric \(\approx\) binomial.
+
+\subsection*{Variance of Sample Mean}
+Finite population correction:\\
+\(
+\text{Var}(\bar{X})=\frac{\sigma^2}{n}\left(\frac{N-n}{N-1}\right).
+\)
+
+\subsection*{Tests for Normal Variance}
+\(
+(n-1)S^2/\sigma_0^2 \sim \chi^2(n-1)
+\) used for two-sided variance tests.
+
+\subsection*{Bernoulli Hypothesis Tests}
+For binomial \(X\sim \text{Bin}(n,p)\).\\
+Right-sided, left-sided, or two-sided using binomial tail sums.
+
+\subsection*{Example: Defective Chips}
+Test \(p\le 0.02\). If 10 of 300 defective:\\
+Compute \(P(X\ge 10 | p=0.02)\).\\
+If \(> \alpha\): fail to reject claim.
+
+\subsection*{Example: Proofreaders}
+Counts of disagreements treated as Bernoulli.\\
+Hypothesis test compares difference of error rates.
+
+
+\section*{Lecture 19: Bootstrapping}
+
+\subsection*{Bootstrap Idea}
+Use sample as empirical population.\\
+Resample with replacement to approximate distribution of statistic.
+
+\subsection*{Bootstrap Replicates}
+For each bootstrap sample compute statistic \(T^*\).\\
+Bootstrap distribution approximates sampling distribution of \(T\).
+
+\subsection*{Bootstrap Mean}
+\(X_1,\ldots,X_n\) sample.\\
+Bootstrap sample: draw \(n\) items with replacement from data.\\
+Compute \(\bar{X}^*\). Distribution of \(\bar{X}^*\) approximates true distribution.
+
+\subsection*{Law of Large Numbers}
+Weak LLN: \(\bar{X}\to \mu\) in probability.\\
+Strong LLN: \(\bar{X}\to\mu\) almost surely.
+
+\subsection*{Chebyshev Inequality}
+\(
+P(|X-\mu|\ge k\sigma)\le 1/k^2.
+\)
+
+\subsection*{Finite vs. Infinite Populations}
+If sampling without replacement from large \(N\), bootstrap approximates independence.\\
+If \(n\) not small relative to \(N\), must treat dependence explicitly.
+
+
+\section*{Lecture 20: Regression}
+
+\subsection*{Model}
+Bivariate data \((x_i,y_i)\).\\
+Model: \(y_i=f(x_i)+E_i\).\\
+Goal: predict \(y\) from \(x\).
+
+\subsection*{Total Squared Error}
+\(
+E=\sum (y_i - f(x_i))^2.
+\)\\
+Least squares picks \(f\) minimizing error.
+
+\subsection*{Simple Linear Regression}
+Model:\\
+\(
+y_i=ax_i + b + E_i,\quad E_i\sim N(0,\sigma^2).
+\)\\
+Find \(a,b\) minimizing squared error.
+
+\subsection*{Least Squares Estimators}
+Minimize:\\
+\(
+\sum (y_i - ax_i - b)^2.
+\)\\
+Closed forms for \(a,b\) obtained from normal equations.
+
+\subsection*{Polynomial Regression}
+Model:\\
+\(
+y_i=ax_i^2 + bx_i + c + E_i.
+\)\\
+Least squares chooses \(a,b,c\).
+
+\subsection*{General Regression}
+Fit higher-order polynomials or other functions.\\
+All minimize same error quantity \(\sum (y_i-f(x_i))^2\).
+
+\section*{Lecture 21: Goodness of Fit}
+
+\subsection*{Goal}
+Test whether observed data follow a specified pmf \(p_i\).\\
+Null: \(H_0: P(Y=i)=p_i\). Alternative: \(H_1\): not all equal.
+
+\subsection*{Counts}
+Let \(X_i\) be the count of observations in category \(i\).\\
+Under \(H_0\): \(E[X_i]=np_i\), \(\text{Var}(X_i)=np_i(1-p_i)\approx np_i\).
+
+\subsection*{Test Statistic}
+\(
+T=\sum_{i=1}^k (X_i-np_i)^2/(np_i).
+\)\\
+Large \(T\) suggests model mismatch.
+
+\subsection*{Asymptotic Distribution}
+For large \(n\):\\
+\(
+T\sim \chi^2(k-1).
+\)\\
+Reject \(H_0\) if \(T\ge \chi^2_{k-1,\alpha}\).\\
+
+\subsection*{p-Value}
+\(
+p\text{-value}=P(T\ge t)\approx P(\chi^2_{k-1}\ge t).
+\)
+
+\subsection*{Unknown Parameters}
+If \(p_i(\theta)\) depends on parameter \(\theta\), estimate \(\hat{\theta}\) first.\\
+Replace \(p_i\) with \(\hat{p}_i=p_i(\hat{\theta})\).\\
+Degrees of freedom become \(k-1-m\) where \(m\) parameters estimated.
+
+\subsection*{Poisson Example}
+Regions defined by counts 0,1,2–3,4–5,\(>5\).\\
+\(
+p_1=e^{-\lambda},\;
+p_2=\lambda e^{-\lambda},\;
+p_3=(e^{-\lambda}\lambda^2/2)+(e^{-\lambda}\lambda^3/6),\\
+p_4=(e^{-\lambda}\lambda^4/24)+(e^{-\lambda}\lambda^5/120),\;
+p_5=1-p_1-p_2-p_3-p_4.
+\)\\
+Estimate \(\hat{\lambda}=\bar{Y}\).\\
+Statistic:\\
+\(
+T=\sum (X_i-n\hat{p}_i)^2/(n\hat{p}_i).
+\)
+
+\subsection*{Independence Test}
+Categorical variables \(X\in\{1,\ldots,r\}\), \(Y\in\{1,\ldots,s\}\).\\
+Null: \(P_{ij}=p_i q_j\).\\
+Observed counts \(N_{ij}\).\\
+Row totals \(N_i=\sum_j N_{ij}\).\\
+Column totals \(M_j=\sum_i N_{ij}\).\\
+Estimates:\\
+\(
+\hat{p}_i=N_i/n,\quad \hat{q}_j=M_j/n.
+\)
+
+\subsection*{Independence Test Statistic}
+\(
+T=\sum_{i=1}^r\sum_{j=1}^s (N_{ij}-n\hat{p}_i\hat{q}_j)^2/(n\hat{p}_i\hat{q}_j).
+\)\\
+Asymptotically:\\
+\(
+T\sim \chi^2((r-1)(s-1)).
+\)
+
+
+\section*{Lecture 22: Weighted Least Squares}
+
+\subsection*{Weighted Least Squares Setup}
+Model \(Y_i=A+Bx_i+E_i\).\\
+Weights \(w_i\) used when variances differ.\\
+Minimize:\\
+\(
+\sum_i w_i (Y_i-A-Bx_i)^2.
+\)
+
+\subsection*{Normal Equations}
+\(
+\sum_i w_i Y_i = A\sum_i w_i + B\sum_i w_i x_i,\\
+\sum_i w_i x_i Y_i = A\sum_i w_i x_i + B\sum_i w_i x_i^2.
+\)\\
+Solve for \(A,B\).
+
+\subsection*{Variance Structure}
+If \(\text{Var}(Y_i)=\sigma^2/w_i\) or \(\sigma^2/(\alpha x_i)\), use weights \(w_i\propto 1/\text{Var}(Y_i)\).
+\subsection*{MLE Connection}
+Assuming normal errors:
+\(
+f(Y_1,\ldots,Y_n)=\\\prod \frac{\sqrt{w_i}}{\sqrt{2\pi}\sigma}\exp(-(w_i/2\sigma^2)(Y_i-\alpha-\beta x_i)^2).
+\)\\
+MLE of \((\alpha,\beta)\) equals weighted least squares solution.
+
+\subsection*{Example}
+Solve system:\\
+\(
+104.22=5.34A+10B,\\
+277.9=10A+41B.
+\)\\
+Solution (from slides):\\ \(A=12.561,\; B=3.714\).
+
+\subsection*{Polynomial Regression}
+Model:\\
+\(
+Y_i=B_0+B_1 x_i + B_2 x_i^2+\cdots+B_r x_i^r + E_i.
+\)\\
+Least squares minimizes:\\
+\(
+\sum_{i=1}^n (Y_i-B_0-B_1 x_i-\cdots-B_r x_i^r)^2.
+\)
+
+\subsection*{Linear MMSE Estimator}
+For jointly normal \(X,Y\):\\ optimal estimator linear.\\
+Estimator:\\
+\(
+Y=ax+b,\quad a=\text{Cov}(Y,X)/\sigma_X^2,\quad \\b=E[Y]-aE[X].
+\)\\
+For normal variables:\\
+\(
+E(Y|X)=aX+b
+\)
+equals the optimum MMSE estimator.
+\section*{Final 2025: Estimators and NHST}
+
+\subsection*{Difference of Means Confidence Interval}
+Let \\\(X_1,\ldots,X_n\sim N(\mu_1,\sigma_1^2)\), \(Y_1,\ldots,Y_m\sim N(\mu_2,\sigma_2^2)\), independent.\\
+MLEs: \(\bar{X}, \bar{Y}\).\\
+\(
+\bar{X}\sim N(\mu_1,\sigma_1^2/n),\quad
+\bar{Y}\sim N(\mu_2,\sigma_2^2/m).
+\)\\
+Difference: \(\bar{X}-\bar{Y}\sim N(\mu_1-\mu_2,\sigma_1^2/n+\sigma_2^2/m)\).\\
+
+
+\subsection*{Bayes Estimator for Normal Mean}
+Given \\\(X_i\sim N(\theta,\sigma_0^2)\), prior \(\theta\sim N(\mu, \sigma^2)\).\\
+Posterior pdf:\\ \(
+f(\theta|x_1,\ldots,x_n)=\frac{f(x_1,\ldots,x_n|\theta)p(\theta)}{\int f(x_1,\ldots,x_n|\theta)p(\theta)\,d\theta}.
+\)\\
+\(
+f(x_1,\ldots,x_n|\theta)\\=\frac{1}{(2\pi \sigma_0^2)^{n/2}}
+\exp\left(-\sum (x_i-\theta)^2/(2\sigma_0^2)\right).
+\)\\
+\(
+p(\theta)=\frac{1}{\sqrt{2\pi}\sigma}\exp\left(-( \theta-\mu)^2/(2\sigma^2)\right).
+\)\\
+Posterior mean: \\
+\(
+E[\theta|X]=\frac{n\sigma^2}{n\sigma^2+\sigma_0^2}\bar{X}
++\frac{\sigma_0^2}{n\sigma^2+\sigma_0^2}\mu
+=\frac{n/\sigma_0^2}{n/\sigma_0^2+1/\sigma^2}\bar{X}
++\frac{1/\sigma^2}{n/\sigma_0^2+1/\sigma^2}\mu.
+\)\\
+Posterior variance: \(
+\sigma_{\theta}^2=\frac{\sigma_0^2\sigma^2}{n\sigma^2+\sigma_0^2}.
+\)
+
+
+\subsection*{Distribution of \(X_{n+1}-\bar{X}_n\)}
+Let \(X_i\sim N(\mu,1)\).\\
+\(
+X_{n+1}-\bar{X}_n\sim N(0,1+1/n).
+\)
+
+
+\subsection*{Combining Independent Unbiased Estimators}
+Two unbiased estimators \(d_1,d_2\) with variances \(\sigma_1^2,\sigma_2^2\).\\
+Combined estimator: \(d=\lambda d_1+(1-\lambda)d_2\).\\
+MSE: \(
+r(d,\theta)=\lambda^2\sigma_1^2+(1-\lambda)^2\sigma_2^2.
+\)\\
+Derivative: \(
+\frac{d}{d\lambda}r=2\lambda\sigma_1^2-2(1-\lambda)\sigma_2^2.
+\)\\
+Optimal weight:\\ \(
+\hat{\lambda}=\frac{\sigma_2^2}{\sigma_1^2+\sigma_2^2}=\frac{1/\sigma_1^2}{1/\sigma_1^2+1/\sigma_2^2}.
+\)
+
+
+\subsection*{Pooled Variance Estimator}
+Samples: \(X_i\sim N(\mu,\sigma^2)\), \(Y_i\sim N(\mu,\sigma^2)\).\\
+Sample variances \(S_X^2,S_Y^2\).\\
+\(
+S_p^2=\frac{(n-1)S_X^2+(m-1)S_Y^2}{n+m-2}.
+\)\\
+Using \(\text{Var}(S_X^2)=2\sigma^4/(n-1)\).
+
+
+\subsection*{Weighted Laboratory Estimator}
+Estimate acidity by\\
+\(
+d=\frac{\sum d_i/\sigma_i^2}{\sum 1/\sigma_i^2}.
+\)
+MSE: \(
+r(d,\theta)=\sum \left(\frac{1}{\sum 1/\sigma_i^2}\right)^2\frac{1}{\sigma_i^2}.
+\)
+\subsection*{MSE Decomposition}
+If estimator \(d\) is unbiased: \(r(d,\theta)=\text{Var}(d)\).\\
+General form: \(
+r(d,\theta)=\text{Var}(d)+b_\theta^2(d).
+\)
+
+
+\subsection*{Uniform(0,θ) Estimation}
+Sample mean estimator: \(
+d_1=\frac{2}{n}\sum X_i
+\) is unbiased.\\
+Thus \(
+r(d_1,\theta)=\text{Var}(d_1).
+\)
+
+
+\subsection*{MLE for Uniform(0,θ)}
+Estimator: \(d_2=\max X_i\).\\
+CDF: \(
+F_{d_2}(x)=(x/\theta)^n.
+\)\\
+PDF: \(
+f_{d_2}(x)=\frac{n x^{n-1}}{\theta^n}.
+\)\\
+\(
+E[d_2]=\frac{n}{n+1}\theta,\quad
+E[d_2^2]=\frac{n}{n+2}\theta^2.
+\)\\
+\(
+\text{Var}(d_2)=\frac{n\theta^2}{(n+2)(n+1)^2}.
+\)\\
+\(
+r(d_2,\theta)=\left(\frac{n}{n+1}-1\right)^2\theta^2+\text{Var}(d_2)
+=\frac{2\theta^2}{(n+1)(n+2)}.
+\)
+
+
+\subsection*{Scaled MLE Estimator}
+Let \(d_c=c\max X_i\).\\
+MSE: 
+\(
+r(d_c,\theta)=c^2\text{Var}(d_2)+ (cE[d_2]-\theta)^2.
+\)\\
+Derivative gives optimal\\
+\(
+c^*=\frac{n+2}{n+1}-\frac{n}{n+1}=\frac{n+2}{n+1}.
+\)\\
+Resulting MSE: \(
+r=\frac{\theta^2}{(n+1)^2}.
+\)
+
+
+\subsection*{General Bayes Estimator}
+\(
+E[\theta|X_1,\ldots,X_n]=\int \theta f(\theta|X)\,d\theta.
+\)
+
+
+\subsection*{Bayes Estimator for Bernoulli with Uniform Prior}
+Model: \(X_i\sim \text{Bernoulli}(\theta)\). Prior: \(p(\theta)=1\).\\
+Likelihood: \(
+f(X|\theta)=\theta^x(1-\theta)^{n-x}.
+\)\\
+Posterior: proportional to \(\theta^x(1-\theta)^{n-x}\).\\
+Posterior mean: \(
+E[\theta|X]=\frac{x+1}{n+2}.
+\)\\
+Example: 6 successes in 10 trials → estimator \(7/12\).
+
+
+\subsection*{Beta-Binomial Conjugacy}
+Prior: \(\theta\sim \text{Beta}(\alpha,\beta)\).\\
+Posterior: \(\theta|X\sim \text{Beta}(\alpha+h,\beta+t)\).\\
+Predictive: \(
+P(X_{n+1}=1)=\frac{\alpha+h}{\alpha+\beta+h+t}.
+\)
+\subsection*{Gamma-Poisson Conjugacy}
+Prior: \(\lambda\sim \text{Gamma}(\alpha,\beta)\).\\
+Data: total \(S=\sum X_i\).\\
+Posterior: \(
+\lambda|X\sim \text{Gamma}(\alpha+S,\beta+n).
+\)\\
+Predictive: Negative Binomial.\\
+Example: prior Gamma(2,1), counts sum to 12 over 5 intervals → posterior Gamma(14,6).
+
+
+\subsection*{Dice Identification Bayesian Example}
+Dice: D4,D6,D8,D12,D20, prior \(1/5\). Observations: 5,9.\\
+Only D12,D20 possible.\\
+Unnormalized posteriors: \(1/(144\cdot 5)\) and \(1/(400\cdot 5)\).\\
+Ratio: \(25/9\).\\
+Posterior: \(P(D12|X)=25/34\), \(P(D20|X)=9/34\).\\
+Predictive distribution: for \(1\le y\le 12\):\\
+\(
+P(Y=y)=\frac{25}{408}+\frac{9}{680}=\frac{19}{255}.
+\)\\
+For \(13\le y\le 20\): \(
+P(Y=y)=\frac{9}{680}.
+\)
+
+
+\subsection*{NHST: Loaded Die Example}
+\(n=60\), observed \(X=20\) sixes.\\
+Null: \(p=1/6\).\\
+\(
+\mu=10,\ \sigma=\sqrt{8.33}\approx 2.886.
+\)\\
+\(
+z=\frac{20-10}{2.886}\approx 3.46.
+\)\\
+\(
+p\approx 0.00027<0.05
+\Rightarrow\text{reject }H_0.
+\)
+
+
+\subsection*{Composite NHST for Bernoulli}
+Null: \(p\le 0.20\). Least favorable: \(p=0.20\).\\
+Observed \(X=14\) out of 40.\\
+\(
+\mu=8,\ \sigma=\sqrt{6.4}=2.53.
+\)\\
+\(
+z=\frac{14-8}{2.53}\approx 2.37.
+\)\\
+\(
+p\approx 0.0089<0.05 \Rightarrow \text{reject}.
+\)
+
+
+\subsection*{NHST for Poisson}
+Test \(H_0:\lambda=3\) vs \(H_1:\lambda>3\).\\
+Observed \(X=8\).\\
+\(
+p=P(X\ge 8|\lambda=3)\approx 0.0119<0.05 \Rightarrow \text{reject}.
+\)
+
+
+\subsection*{Composite Poisson NHST}
+Null: \(\lambda\le 2\). Least favorable: \(\lambda=2\).\\
+Observed \(X=6\).\\
+\(
+p=P(X\ge 6|\lambda=2)\approx 0.016<0.05.
+\)
+
+
+\subsection*{Two-Sample Normal NHST}
+\(X_i\sim N(\mu_1,4)\), \(Y_i\sim N(\mu_2,4)\).\\
+\(
+\bar{X}=505.2,\ m=10;\ \bar{Y}=499.1,\ n=12.
+\)\\
+SE: \(
+SE=2\sqrt{1/10+1/12}\approx 0.906.
+\)\\
+\(
+z=(505.2-499.1)/0.906\approx 6.74.
+\)\\
+\(
+p\approx 1.7\times 10^{-11}\Rightarrow \text{reject}.
+\)
+
+
+\subsection*{Two-Sample Bernoulli NHST}
+\(n_1=80,n_2=100\).\\
+\(p_1=0.65,p_2=0.50\).\\
+Pooled: \(
+\hat{p}=102/180\approx 0.5667.
+\)\\
+\(
+SE=\sqrt{\hat{p}(1-\hat{p})(1/n_1+1/n_2)}\approx 0.0742.
+\)\\
+\(
+z=0.15/0.0742\approx 2.02.
+\)\\
+\(
+p\approx 0.042<0.05\Rightarrow \text{reject}.
+\)
+\section{Final Exams: 2023–2024}
+
+\subsection*{Q1: Bayesian Dice Posterior and Predictive (2023 Q1, 2024 Q1-1)}
+Question: Assume there are five dice, 4-sided, 6-sided, 8-sided, 12-sided, and 20-sided. We select one of these five dice at random (with probability \(1/5\)) and roll it twice. The two results are 5 and 9. What is the posterior probability mass function for the outcome of a third roll?\\
+
+Solution: Only 12-sided and 20-sided dice can yield both 5 and 9.\\
+Posterior probabilities: \\
+\(
+P(D=12|5,9)=\frac{25}{34},\quad
+P(D=20|5,9)=\frac{9}{34}.
+\)\\
+Predictive pmf for third roll \(X_3\): \\
+\(
+P(X_3=x|5,9)=
+\begin{cases}
+\frac{19}{255},& x\in\{1,\ldots,12\},\\
+\frac{9}{680},& x\in\{13,\ldots,20\},\\
+0,& \text{otherwise}.
+\end{cases}
+\)
+
+
+\subsection*{Q2: CLT for Sum of a Fair Die (2023 Q2)}
+Question: Consider a fair dice with six sides numbered from 1 to 6. Assume the dice is tossed 1000 times, and sum of the outcomes, \(S\), is computed. Express the approximate probability that \(3000\le S\le 4000\) in terms of an integral. No closed form expression, nor numerical computations are needed. Use Central Limit Theorem.\\
+
+Solution: For one roll \(X\): \\
+\(
+E[X]=3.5,\quad \text{Var}(X)=\frac{35}{12}.
+\)\\
+For \(S=\sum_{i=1}^{1000} X_i\): \\
+\(
+E[S]=1000\cdot 3.5=3500,\quad \text{Var}(S)=1000\cdot \frac{35}{12}=\frac{35000}{12}.
+\)\\
+Standardize: \\
+\(
+a=\frac{3000-3500}{\sqrt{1000\cdot 35/12}},\quad
+b=\frac{4000-3500}{\sqrt{1000\cdot 35/12}}.
+\)\\
+Then by CLT: \\
+\(
+P(3000\le S\le 4000)\approx \int_a^b \frac{1}{\sqrt{2\pi}}e^{-y^2/2}\,dy.
+\)
+
+
+\subsection*{Q3: Linear Combination of Two Estimators (2023 Q3, 2024 Q2)}
+Question: Let \(d_1,d_2\) denote two independent unbiased estimators of the mean of a distribution \(\theta\), i.e. \(E(d_1)=E(d_2)=\theta\).\\
+Part 3-1 (2-1): Show that \(\mu d_1+(1-\mu)d_2\) is an unbiased estimate of \(\theta\).\\
+Part 3-2 (2-2-1): Assume \(\text{Var}(d_1)=\sigma_1^2\) and \(\text{Var}(d_2)=\sigma_2^2\). Find \(\mu\) such that \(\mu d_1+(1-\mu)d_2\) provides the minimum mean square error estimate of \(\theta\).\\
+Part 2-2-2 (2024): Compute the variance at the minimizing \(\mu\).\\
+Part 2-2-3 (2024): Assume \(E(d_1)=\theta\) (unbiased) and \(E(d_2)=\theta+\beta\) (biased), with \(\text{Var}(d_1)=\text{Var}(d_2)=\sigma_0^2\). Linearly combine \(d_1,d_2\) as \(c+\mu d_1+(1-\mu)d_2\) to minimize mean square error; compute \(c,\mu\).\\
+Part 2-3 (2024): Assume a third unbiased estimator \(d_3\) with variances \(\sigma_1^2,\sigma_2^2,\sigma_3^2\). Linearly combine \(d_1,d_2,d_3\) to minimize mean square error; compute the minimum MSE.\\
+Part 2-4 (2024): Give an example of a density for which these linear estimators are optimum.\\
+
+Solution: \\
+Part 3-1: \\
+\(
+E[\mu d_1+(1-\mu)d_2]=\mu E[d_1]+(1-\mu)E[d_2]=\mu\theta+(1-\mu)\theta=\theta.
+\)\\
+
+Part 3-2 / 2-2-1: \\
+\(
+\text{Var}(\mu d_1+(1-\mu)d_2)=\mu^2\sigma_1^2+(1-\mu)^2\sigma_2^2.
+\)\\
+Differentiate and set to zero: \\
+\(
+\frac{d}{d\mu}=\;2\mu\sigma_1^2-2(1-\mu)\sigma_2^2=0
+\Rightarrow \mu^*=\frac{\sigma_2^2}{\sigma_1^2+\sigma_2^2}.
+\)\\
+
+Part 2-2-2: Plug \(\mu^*\) into variance: \\
+\(
+\text{Var}_{\min}=\frac{\sigma_1^2\sigma_2^2}{\sigma_1^2+\sigma_2^2}.
+\)\\
+
+Part 2-2-3: Let the estimator be \(c+\mu d_1+(1-\mu)d_2\).\\
+Mean: \\
+\(
+E=c+\mu\theta+(1-\mu)(\theta+\beta)=c+\theta+(1-\mu)\beta.
+\)\\
+Unbiasedness requires \(c+(1-\mu)\beta=0\Rightarrow c=-(1-\mu)\beta\).\\
+Variance: \(\text{Var}(\mu d_1+(1-\mu)d_2)=\mu^2\sigma_0^2+(1-\mu)^2\sigma_0^2=\sigma_0^2(\mu^2+(1-\mu)^2)\).\\
+Minimize \(\mu^2+(1-\mu)^2\Rightarrow 2\mu-1=0\Rightarrow \mu^*=1/2\).\\
+Thus \(c=-(1-1/2)\beta=-\beta/2\).\\
+Estimator: \\
+\(
+\hat{\theta}_{MMSE}=-\beta/2+\frac{1}{2}d_1+\frac{1}{2}d_2.
+\)\\
+
+Part 2-3: With three unbiased estimators, consider \(\hat{\theta}=w_1 d_1+w_2 d_2+w_3 d_3\) with \(w_1+w_2+w_3=1\).\\
+Minimize \(\text{Var}(\hat{\theta})=w_1^2\sigma_1^2+w_2^2\sigma_2^2+w_3^2\sigma_3^2\).\\
+Solution: \\
+\(
+w_i=\frac{1/\sigma_i^2}{\sum_{j=1}^3 1/\sigma_j^2},\quad
+\text{MSE}_{\min}=\frac{1}{\sum_{j=1}^3 1/\sigma_j^2}.
+\)\\
+
+Part 2-4: For \(X_i\sim N(\theta,\sigma^2)\), these linear estimators are both MMSE and ML; the normal density provides the example.
+
+
+\subsection*{Q4: Coin Fairness NHST (2023 Q4)}
+Question: A null hypothesis concerns deciding if a coin is fair or not. This means \(H_0:\theta=1/2\). Assume \(H_0\) is rejected if in 5 flips we get at least 4 outcomes of the same type (4 or 5 tails or 4 or 5 heads).\\
+4-1: What is the significance level of this test?\\
+4-2: If \(H_A:\theta=2/3\), what is the power of the test?\\
+
+Solution: Let \(X\) be number of heads in 5 flips under \(H_0:\theta=1/2\). Reject if \(X\in\{0,1,4,5\}\).\\
+4-1: \\
+\(
+\alpha=P(\text{reject }H_0|H_0)=P(X\in\{0,1,4,5\})
+=\sum_{k=0,1,4,5} {5\choose k}(1/2)^5=3/8.
+\)\\
+4-2: Under \(H_A:\theta=2/3\): \\
+\(
+\text{Power}=\sum_{k=0,1,4,5} {5\choose k}(2/3)^k(1/3)^{5-k}
+=41/81.
+\)
+
+
+\subsection*{Q5: Laplace Location Estimation (2023 Q5)}
+Question: Consider the pdf \(f(x)=0.5 e^{-|x-\theta|}\), \(-\infty<x<\infty\).\\
+5-1: Determine the mean \(E[X]\).\\
+5-2: Determine the MMSE estimate of \(\theta\) if \(N\) independent samples \(X_1,\ldots,X_N\) are observed.\\
+5-3: Determine the MMSE estimate and the MLE of \(\theta\) if \(N=3\) samples \(X_1=1,X_2=3,X_3=5\) are observed.\\
+5-4: Determine the MLE of \(\theta\) for general \(N\) independent samples from \(f(x)\).\\
+
+Solution: \\
+5-1: Symmetry around \(\theta\) implies \\
+\(
+E[X]=\theta.
+\)\\
+5-2: For squared loss, MMSE estimator is posterior mean. With flat prior or symmetry, the MMSE of \(\theta\) is the sample mean: \\
+\(
+\hat{\theta}_{MMSE}=\bar{X}=\frac{1}{N}\sum_{i=1}^N X_i.
+\)\\
+5-3: For \(X_1=1,X_2=3,X_3=5\), \(\bar{X}=3\).\\
+MMSE: \(\hat{\theta}_{MMSE}=3\).\\
+The Laplace likelihood is maximized at the sample median; median of \{1,3,5\} is 3, so \(\hat{\theta}_{ML}=3\).\\
+5-4: For general \(N\), MLE is the sample median \(m\) that minimizes \(\sum |X_i-\theta|\). Thus \\
+\(
+\hat{\theta}_{ML}=\text{median}(X_1,\ldots,X_N).
+\)
+
+
+\subsection*{Q6: Height Measurement with Two Noisy Observations (2023 Q6)}
+Question: In measuring the height of a building \(H\), a device at distance \(d\) shows \(y=G(d)H+E\), where \(E\sim N(0,1)\). To improve accuracy, two measurements are performed at distances \(d_1,d_2\) with results \(y_1=G(d_1)H+E_1\), \(y_2=G(d_2)H+E_2\), where \(E_1,E_2\) are independent \(N(0,1)\). Let \(G_1=G(d_1), G_2=G(d_2)\). An engineer uses \(w_1 y_1+w_2 y_2\) to estimate \(H\).\\
+6-1: Compute \(w_1,w_2\) (in terms of \(G_1,G_2\)) that minimize mean square error in estimating \(H\).\\
+6-2: Compute \(w_1,w_2\) for the maximum likelihood estimate of \(H\).\\
+
+Solution: Write estimator as \(Ĥ=w_1 y_1+w_2 y_2\).\\
+Unbiasedness: \\
+\(
+E[Ĥ]=w_1 G_1 H+w_2 G_2 H=(w_1 G_1+w_2 G_2)H.
+\)\\
+Require \(w_1 G_1+w_2 G_2=1\).\\
+Minimize variance \(\text{Var}(Ĥ)=w_1^2+w_2^2\) subject to this constraint. Using Lagrange multipliers or algebra: \\
+\(
+w_1=\frac{G_1}{G_1^2+G_2^2},\quad
+w_2=\frac{G_2}{G_1^2+G_2^2}.
+\)\\
+This is also the ML estimator since errors are Gaussian and we are maximizing joint likelihood of \(y_1,y_2\). Equivalent ML form: \\
+\(
+\hat{H}_{ML}=\frac{G_1 y_1+G_2 y_2}{G_1^2+G_2^2}.
+\)
+
+
+\subsection*{Q7: Multi-Dice Long-Run Sample Mean (2024 Q1-2)}
+Question: Assume a die is selected (with probability \(1/5\)) from the same five dice as in Q1 and rolled \(N\) times. Let \(S\) be the sample mean of outcomes. What is the probability mass function of \(S\) for \(N\to\infty\)?\\
+
+Solution: Conditional on die type \(k\), the sample mean converges to \(\mu_k=(k+1)/2\).\\
+Since each type chosen with probability \(1/5\), limit pmf: \\
+\(
+P(S=\mu_k)=1/5,\quad \mu_k=(k+1)/2,\ k\in\{4,6,8,12,20\}.
+\)
+
+
+\subsection*{Q8: Multi-Dice CLT Mixture Probability (2024 Q1-3)}
+Question: Assume a dice is selected (with probability \(1/5\) and with replacement), each selected dice is rolled 100 times, and the sum of all outcomes \(S\) is computed. What is \(P(200\le S\le 300)\)? Dice types are as in Q1-1 and Q1-2. No closed form or numeric computation is needed; use Gaussian approximations (CLT) and express result in terms of \(\int_{-\infty}^{\alpha} \frac{1}{\sqrt{2\pi}}e^{-y^2/2}dy\).\\
+
+Solution: For type \(k\), mean and variance of one roll: \\
+\(
+\mu_k=(k+1)/2,\quad \sigma_k^2=(k^2-1)/12.
+\)\\
+For 100 rolls: \\
+\(
+S_k\sim N(100\mu_k,100\sigma_k^2).
+\)\\
+Thus \\
+\(
+P(200\le S\le 300)
+=\frac{1}{5}\sum_k \Big[
+Z\Big(\frac{300-100\mu_k}{10\sigma_k}\Big)
+- Z\Big(\frac{200-100\mu_k}{10\sigma_k}\Big)
+\Big],
+\)\\
+where \(
+Z(\alpha)=\int_{-\infty}^{\alpha} \frac{1}{\sqrt{2\pi}}e^{-y^2/2}dy.
+\)
+
+
+\subsection*{Q9: Loaded Dice NHST (2024 Q3)}
+Question: A null hypothesis concerns deciding if a gambling die is fair for landing a 6, i.e. \(H_0:P_6=1/6\). Assume \(H_0\) is rejected if in 6 rolls at least 3 outcomes are 6.\\
+3-1: What is the significance level of this test?\\
+3-2: If \(H_A:P_6=1/7\), what is the power of the test?\\
+3-3-1: Assume the manufacturer claims that the significance level for \(H_0:P_6=1/6\) is 10 percent when the die is rolled many times. A buyer selects 10 dice and for each die rolls 6 times, records \(N_i\)=number of sixes, and \(Z_i=1\) if \(N_i\in\{3,4,5,6\}\), \(Z_i=0\) if \(N_i\in\{0,1,2\}\). Let \(X=\sum_{i=1}^{10}Z_i\). What values of \(X\) would cause the buyer to reject the company’s claim?\\
+3-3-2: Assume the buyer performs the same experiment 100 times. Let \(Y=\sum_{i=1}^{100}Z_i\). Express (in terms of \(Z_\alpha=\int_{-\infty}^{\alpha} \frac{1}{\sqrt{2\pi}}e^{-y^2/2}dy\)) what values of \(Y\) would enable the buyer to reject the company’s claim.\\
+
+Solution: \\
+3-1: Let \(K\) be number of sixes in 6 rolls. Under \(H_0: p=1/6\): \\
+\(
+\alpha=P(K\ge 3)=\sum_{k=3}^6 {6\choose k}(1/6)^k(5/6)^{6-k}=1453/23328.
+\)\\
+
+3-2: Under \(H_A: p=1/7\): \\
+\(
+\text{Power}=\sum_{k=3}^6 {6\choose k}(1/7)^k(6/7)^{6-k}=4897/117649.
+\)\\
+
+3-3-1: Under company claim (approx \(p_6=0.1\)), define \\
+\(
+Z_i=
+\begin{cases}
+1,& K_i\ge 3,\\
+0,& K_i\le 2.
+\end{cases}
+\)\\
+Then \(X=\sum_{i=1}^{10}Z_i\sim \text{Bin}(10,p_0)\) with \(p_0=P(K\ge 3)\) under the claimed level (about 0.1). A natural rejection rule is \(X\ge 3\).\\
+
+3-3-2: For 100 experiments, \(Y=\sum_{i=1}^{100}Z_i\). Under the claim, \\
+\(
+E[Y]=100p_0\approx 10,\quad \text{Var}(Y)=100p_0(1-p_0)\approx 9.
+\)\\
+Use CLT: \((Y-10)/3\) approximately \(N(0,1)\). Reject if \\
+\(
+\frac{Y-10}{3}\ge z_{0.9},
+\)\\
+i.e. \(Y\ge 10+3 z_{0.9}\), where \(z_{0.9}\) satisfies \(Z(z_{0.9})=0.9\).
+
+
+\subsection*{Q10: Uniform(0,b) Estimation and MLEs (2024 Q4)}
+Question: Let \(X_i, i=1,\ldots,N\) denote samples from a uniform density \(U(a,b)\).\\
+4-1: For \(a=0\), assume sample mean is used to find an unbiased estimator \(d_1\) for \(b\).\\
+4-1-1: Express \(d_1\) as a function of \(X_i\).\\
+4-1-2: Find the mean square error associated with \(d_1\).\\
+4-2-1: For \(a=0\), what is the maximum likelihood estimate of \(b\)?\\
+4-2-2: What are the maximum likelihood estimates of \(a\) and \(b\) for \(a\neq 0,b\neq 0\)?\\
+4-3: For \(a=0\) what is the pdf of the MLE of \(b\) in 4-2-1?\\
+4-4: For \(a=0\) what is the minimum mean square estimate for \(b\)?\\
+4-5: For \(a\neq 0,b\neq 0\) what is the minimum mean square estimate for the mean of \(U(a,b)\)?\\
+
+Solution: \\
+4-1-1: For \(U(0,b)\), mean is \(b/2\). Sample mean \(\bar{X}=\frac{1}{N}\sum X_i\). Unbiased estimator: \\
+\(
+d_1=2\bar{X}=\frac{2}{N}\sum_{i=1}^N X_i.
+\)\\
+
+4-1-2: \(\text{Var}(\bar{X})=b^2/(12N)\). Then \\
+\(
+MSE(d_1)=\text{Var}(d_1)=4\cdot \frac{b^2}{12N}=b^2/(3N).
+\)\\
+
+4-2-1: For \(a=0\), MLE is the maximum: \\
+\(
+\hat{b}_{ML}=X_{(N)}.
+\)\\
+
+4-2-2: For \(U(a,b)\) with unknown \(a,b\): \\
+\(
+\hat{a}=X_{(1)},\quad \hat{b}=X_{(N)}.
+\)\\
+
+4-3: For \(a=0\), pdf of \(M=X_{(N)}\): \\
+\(
+f_M(x)=\frac{N x^{N-1}}{b^N},\quad 0\le x\le b.
+\)\\
+
+4-4: Using \(M=X_{(N)}\): MMSE estimator of \(b\) is \\
+\(
+\hat{b}_{MMSE}=\frac{N+2}{N+1}M.
+\)\\
+
+4-5: The mean of \(U(a,b)\) is \(\mu=(a+b)/2\). A natural MMSE estimator uses order statistics: \\
+\(
+\hat{\mu}=\frac{X_{(1)}+X_{(N)}}{2}.
+\)

@@ -1,0 +1,214 @@
+\section*{Lecture 7: Probabilistic Prediction}
+
+\subsection*{Three-Coin Example}
+Three coins:
+A(\(p=0.5\)), B(\(p=0.6\)), C(\(p=0.9\)).
+Choose one uniformly: \(P(H)=1/3\).
+
+\subsection*{Prior Predictive}
+\(
+P(H_1)=P(H_2)=P(H_3)=\tfrac13.
+\)
+
+\( P(\text{heads})=\tfrac13(0.5+0.6+0.9)=0.667.
+\)
+
+\subsection*{Posterior After One Head}
+Numerators:\\
+\(
+(0.5)(\tfrac13)=0.167,\quad
+(0.6)(\tfrac13)=0.200,\quad
+(0.9)(\tfrac13)=0.300.\quad
+\)
+
+Sum P(D)=0.667.
+
+Normalize:
+\(
+P(A|H)=0.167 0.667=0.25,\quad
+P(B|H)=0.30,\quad
+P(C|H)=0.45.
+\)
+
+
+\subsection*{Posterior Predictive for Next Toss}
+
+\(P(\text{head next}|H\)=0.25(0.5)+0.30(0.6)+0.45(0.9)=0.71.
+)\
+
+\subsection*{Five Tosses Example}
+Observed \(1\) head in \(5\) tosses.
+Use binomial likelihood:
+\(
+P(D|H_i)=\binom{5}{1}p_i(1-p_i)^4.
+\)
+Compute: \\
+\resizebox{\linewidth}{!}{%
+\(
+\begin{array}{lccc}
+\text{Coin} & p_i & P(D|H_i) & \text{Numerator }P(D|H_i)P(H_i)\\
+\hline
+A & 0.5 & 5(0.5)(0.5)^4=0.15625 & 0.0521\\
+B & 0.6 & 5(0.6)(0.4)^4=0.0768 & 0.0256\\
+C & 0.9 & 5(0.9)(0.1)^4=0.0045 & 0.0015\\
+\hline
+\text{Total} &  &  & 0.0792
+\end{array}
+\)
+}
+Normalize:
+\(
+P(A|D)=0.669,\quad P(B|D)=0.329,\quad P(C|D)=0.002.
+\)
+
+\subsection*{Posterior Predictive}
+\(
+P(\text{head next}|D)
+=0.669(0.5)+0.329(0.6)+0.002(0.9)=0.534.
+\)
+
+% \subsection*{Odds Form}
+% \(
+% \text{O}(E)=\frac{P(E)}{1-P(E)}.\\
+% \)
+% \(
+% \text{Posterior odds}= \text{Prior odds}\times \text{Bayes factor}.
+% \)
+\subsection*{Blood-Type}
+
+Population: 60\% type O, 1\% type AB.\\
+\(S=\) "Oliver and another unknown person were at the scene."\\
+\(S^c=\) "Two unknown people were at the scene."\\
+\(D=\) "Type O and AB blood were found; Oliver is type O."
+
+{}
+\(BF = \frac{P(D|S)}{P(D|S^c)} = \frac{0.01}{2 \cdot 0.6 \cdot 0.01} = 0.83.\)
+
+
+Therefore the posterior odds \(= 0.83 \times\) prior odds \((O(S|D) = 0.83 \cdot O(S)).\)
+
+\(O(H|D_1, D_2) = O(H) \cdot \frac{P(D_1|H)}{P(D_1|H^c)} \cdot \frac{P(D_2|H)}{P(D_2|H^c)} \\ = O(H) \cdot BF_1 \cdot BF_2.\)
+
+% \subsection*{Marfan Syndrome Example}
+% \(
+% P(M)=1/15000=6.7\times10^{-5}.
+% \)\\ \(
+% P(F|M)=0.7,\quad P(F|M^c)=0.07\Rightarrow \text{BF}=10.
+% \)
+
+% \(
+% P(W|M)=0.9,\quad P(W|M^c)=0.1\Rightarrow \text{BF}=9.
+% \)\\
+% Combined\\
+% \(
+% \text{Posterior odds}=6.7\times10^{-5}\times10\times9=0.006.
+% \)\\
+% Convert back:\\
+% \(
+% P(M|F,W)=\frac{0.006}{1+0.006}\\=0.00596\approx0.6\%.
+% \)
+\subsection*{Coin Flip Example}
+
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lccccc}
+\hline
+\(H\) & \(P(H)\) & \(P(D_1|H)\) & \(P(H)P(D_1|H)\) & \(P(H|D_1)\)\\
+\hline
+0.3 & 0.2 & 0.3 & 0.06 & 0.12\\
+0.5 & 0.6 & 0.5 & 0.30 & 0.60\\
+0.7 & 0.2 & 0.7 & 0.14 & 0.28\\
+\hline
+Total & 1.0 & -- & 0.50 & 1.0\\
+\hline
+\end{tabular}
+}
+
+\(P(\text{heads})=0.50\;\\ P(\text{tails})=0.50,\; O(\text{heads})=1.\)\\
+(i) \(O_{0.3}=\frac{0.12}{0.88}=0.136.\)\\
+(ii) \(O_{0.7}=\frac{0.28}{0.72}=0.389.\)\\
+\(P(\text{heads}|D_1)=0.12(0.3)+0.60(0.5)+0.28(0.7)=0.532.\)\\
+\(P(\text{tails}|D_1)=1-0.532=0.468.\)\\
+\(O(\text{heads}|D_1)=\frac{0.532}{0.468}=1.1368.\)
+
+
+\subsection*{Conditional Independence}
+If \(D_1,D_2\) independent given \(H\):
+\(
+P(D_1,D_2|H)=P(D_1|H)P(D_2|H).
+\)
+Then
+\(
+O(H|D_1,D_2)=O(H)\times BF_1\times BF_2.
+\)
+
+
+\subsection*{Tutorial 5: Question 5}
+\(
+f(x) =
+\begin{cases}
+e^{-(x - \theta)}, & x \ge \theta,\\
+0, & \text{otherwise.}
+\end{cases}
+\) \\
+
+Likelihood Function: \\
+\(
+L(\theta) = f(x_1, \ldots, x_n)
+\\= \prod_{i=1}^{n} e^{-(x_i - \theta)}
+\\=  e^{n\theta} \exp\{-\sum_{i=1}^{n} x_i\}, \quad \theta \le x_i,\ i=1,\ldots,n.
+\) 
+
+Maximization:\\
+The likelihood is zero if \( \theta > \min_i x_i \).\\
+Otherwise, it increases with \( \theta \) because of the factor \( e^{n\theta} \).\\
+Hence, the likelihood is maximized when \( \theta \) is as large as possible: \\
+\(
+\hat{\theta}_{MLE} = \min_i x_i.
+\) 
+
+\subsection*{Tutorial 5: Question 2}
+Let \(X_1, \ldots, X_n\) be independent Poisson random variables each with mean \(\lambda\).\\
+Determine the maximum likelihood estimator of \(\lambda\).
+
+\(
+f(x_1, \ldots, x_n | \lambda) 
+= \frac{e^{-\lambda x_1} \lambda^{x_1}}{x_1!} 
+\cdots 
+\frac{e^{-\lambda x_n} \lambda^{x_n}}{x_n!}
+\) \\
+
+\(
+= \frac{e^{-n\lambda} \lambda^{\sum_{i=1}^{n} x_i}}{x_1! \ldots x_n!}
+\) \\
+
+\(
+\log f(x_1, \ldots, x_n | \lambda)
+\\= -n\lambda + \sum_{i=1}^{n} x_i \log \lambda - \log c
+\) 
+
+\(
+\frac{d}{d\lambda} \log f(x_1, \ldots, x_n | \lambda)
+= -n + \frac{1}{\lambda} \sum_{i=1}^{n} x_i
+\) 
+Setting equal to zero:
+\(
+\text{ }\\
+-n + \frac{1}{\lambda} \sum_{i=1}^{n} x_i = 0
+\),
+
+\(
+\hat{\lambda} = \frac{1}{n} \sum_{i=1}^{n} x_i
+\) \\
+Hence, the maximum likelihood estimator is 
+\(
+\text{} 
+\hat{\lambda} = \frac{1}{n} \sum_{i=1}^{n} X_i
+\) \\
+\textit{Example}: If after 20 days, a total of 857 people have entered the establishment,
+\(
+\hat{\lambda} = \frac{857}{20} = 42.85
+\)
+
+
+%
+

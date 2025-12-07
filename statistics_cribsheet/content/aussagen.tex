@@ -1,0 +1,93 @@
+\section*{Lecture 6: Bayesian Updating }
+
+
+\subsection*{Learning from Data Example}
+A disease has prevalence \(P(H^+) = 0.005\).  
+A screening test has 2\% false positives and 1\% false negatives.
+
+We observe a \textbf{positive test result} \(T^+\).
+
+We want \(P(H^+|T^+)\) and \(P(H^-|T^+)\).
+
+\subsection*{Bayes’ Theorem}
+\(
+P(H|D)=\frac{P(D|H)\,P(H)}{P(D)} \\
+P(D)=\sum_i P(D|H_i)P(H_i)
+\)
+
+% \subsection*{Tree Representation}
+% \(
+% \begin{array}{rcl}
+% P(T^+|H^+) &=& 0.99,\\
+% P(T^-|H^+) &=& 0.01,\\
+% P(T^+|H^-) &=& 0.02,\\
+% P(T^-|H^-) &=& 0.98.
+% \end{array}
+% \) \\
+Total probability: \\
+\(
+P(T^+)=0.99(0.005)+0.02(0.995)\\=0.02485.
+\)
+
+\subsection*{Posterior Probabilities}
+\(
+P(H^+|T^+)=\frac{0.99\cdot0.005}{0.02485}=0.199,\quad \\
+P(H^-|T^+)=0.801.
+\) \\
+A positive test increases the probability of disease but it remains below 50\%.
+
+\subsection*{Terminology}
+Data \(D\): observed evidence (here \(T^+\)). \\
+Hypotheses \(H\): \(H^+\) (has disease), \(H^-\). \\
+Likelihoods \(P(D|H)\): probability of data given hypothesis. \\
+Priors \(P(H)\): belief before seeing data. \\
+Posteriors \(P(H|D)\): belief after observing data.
+
+
+
+\subsection*{Likelihood Table}
+\(
+\begin{array}{lcc}
+\text{Hypothesis} & P(T^+|H) & P(T^-|H) \\
+\hline
+H^+ & 0.99 & 0.01\\
+H^- & 0.02 & 0.98
+\end{array}
+\)
+
+\subsection*{Bayesian Update Table}
+\resizebox{\linewidth}{!}{%
+\(
+\begin{array}{lcccc}
+H & P(H) & P(T^+|H) & P(T^+|H)P(H) & P(H|T^+)\\
+\hline
+H^+ & 0.005 & 0.99 & 0.00495 & 0.199\\
+H^- & 0.995 & 0.02 & 0.01990 & 0.801\\
+\text{Total} & 1 &  & 0.02485 & 1
+\end{array}
+\)
+}
+
+
+
+
+\subsection*{Law of Total Probability}
+\(
+P(D_1)=\sum_i P(D_1|H_i)P(H_i) \\
+P(D_2|D_1)=\sum_i P(D_2|H_i)P(H_i|D_1).
+\)
+
+\subsection*{Probabilistic Prediction}
+After observing \(D_1=5\),\\
+\(
+P(D_2=4|D_1=5) \\ =\sum_i P(D_2=4|H_i)P(H_i|D_1)=0.124.
+\)\\
+This allows computing the probability of future outcomes given past data.
+
+\subsection*{Iterated Updates in Odds Form}
+For independent data \(D_1,D_2\):
+\(
+O(H|D_1,D_2)=O(H)\cdot\mathrm{BF}_1\cdot\mathrm{BF}_2,
+\)
+where the Bayes factor \\ \(\mathrm{BF}_i=P(D_i|H)/P(D_i|H^c)\).
+

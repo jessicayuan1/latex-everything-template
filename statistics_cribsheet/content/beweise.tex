@@ -1,0 +1,51 @@
+\section*{Lecture 9: Beta Distribution }
+Beta(a,b) pdf uses \(f(\theta)=c\,\theta^{a-1}(1-\theta)^{b-1}\) with \(c=\frac{(a+b-1)!}{(a-1)!(b-1)!}\).\\
+Beta shapes are controlled by \(a\) and \(b\), symmetric when \(a=b\).\\
+Support is \(0\le\theta\le1\).\\
+Beta is the conjugate prior for binomial data.
+
+
+\subsection*{Beta Priors}
+Binomial likelihood for \(s\) successes, \(f\) failures is \(p(x|\theta)\propto\theta^{s}(1-\theta)^{f}\).\\
+Posterior becomes \(f(\theta|x)\propto\theta^{a+s-1}(1-\theta)^{b+f-1}\).\\
+Thus posterior is Beta(a+s,b+f).\\
+Order of successes does not affect the posterior.
+
+
+\subsection*{Example: Beta(5,5)}
+Prior Beta(5,5) with data \(s=6,\ f=4\) gives posterior \(f(\theta|x)\propto\theta^{10}(1-\theta)^{8}\).\\
+Posterior is Beta(11,9).\\
+Sequential data \(S S S F F S S S F F\) yields same update.
+
+
+\subsection*{Predictive Prob.}
+Posterior Beta(a',b') has predictive success probability \(\int_{0}^{1}\theta\,f(\theta|x)d\theta\).\\
+This equals mean \(\frac{a'}{a'+b'}\).\\
+Example: Beta(11,9) gives \(\frac{11}{20}\).\\
+Integral relates to Beta(a'+1,b').
+
+
+\subsection*{Conjugate Update}
+Conjugate update rule: \(a\to a+s,\ b\to b+f\).\\
+Beta prior remains Beta after observing binomial data.\\
+Example: Beta(6,8) with 2 heads, 5 tails becomes Beta(8,13).
+
+
+\subsection*{Bayes Table (Continuous)}
+General update uses\\ \(f(\theta|x)=\frac{p(x|\theta)f(\theta)}{\int_{0}^{1}p(x|\theta)f(\theta)d\theta}\).\\
+
+\resizebox{\linewidth}{!}{
+\(
+\begin{array}{lccc}
+\text{Quantity} & \text{Prior} & \text{Likelihood} & \text{Posterior}\\
+\hline
+\theta & f(\theta) & p(x|\theta) & f(\theta|x)\\
+\text{Total} & 1 &  & 1\\
+\end{array}
+\)}
+
+\(f(\theta|x)=\frac{p(x|\theta)f(\theta)}{\int_{0}^{1}p(x|\theta)f(\theta)d\theta}
+\)
+
+Evidence term:\\ \(p(x)=\int_{0}^{1}p(x|\theta)f(\theta)d\theta\).\\
+Predictive:\\ \(p(x_{\text{next}}|x)=\int_{0}^{1}p(x_{\text{next}}|\theta)f(\theta|x)d\theta\).

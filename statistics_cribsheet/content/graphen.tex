@@ -1,0 +1,101 @@
+\begin{tcolorbox}
+    [cheatbox]
+\textbf{307 Final}\\
+by Jessica Y. Dec 9 2025
+\end{tcolorbox}
+
+\section*{Lecture 5: MLE}
+\subsection*{Maximum Likelihood Estimation (MLE)}
+
+Given data \(x_1, x_2, \ldots, x_n\) from a distribution with parameter \(\theta\).\\
+Likelihood function: \\
+\(
+L(\theta) = f(x_1, x_2, \ldots, x_n | \theta) = \prod_{i=1}^{n} f(x_i | \theta)
+\)\\
+Log-likelihood:
+\(
+\ell(\theta) = \log L(\theta) = \sum_{i=1}^{n} \log f(x_i | \theta)
+\)\\
+MLE is the value of \(\theta\) that maximizes \(L(\theta)\) or \(\ell(\theta)\):\\
+\(
+\hat{\theta}_{MLE} = \arg \max_{\theta} L(\theta)
+\)
+
+\subsection*{Example 1: Bernoulli Distribution}
+Let \(X_i \sim \text{Bernoulli}(p)\).\\
+\(
+f(x_i | p) = p^{x_i}(1 - p)^{1 - x_i}
+\)\\
+\(
+L(p) = p^{\sum x_i}(1 - p)^{n - \sum x_i}
+\)\\
+\(
+\log L(p) = \sum x_i \log p + (n - \sum x_i)\log(1 - p)
+\)\\
+Differentiate and set to zero: 
+\(
+\frac{d}{dp}\log L(p) = \frac{\sum x_i}{p} - \frac{n - \sum x_i}{1 - p} = 0
+\)\\
+Hence,
+\(
+\hat{p} = \frac{1}{n}\sum_{i=1}^{n}x_i
+\)\\
+\textit{Example:} If 7 heads occur in 10 flips, \(\hat{p} = 0.7\).
+
+\subsection*{Example 2: Exponential Distribution}
+Let \(X_i \sim \text{Exp}(\lambda)\).\\
+\(
+f(x_i | \lambda) = \lambda e^{-\lambda x_i}, \quad x_i \ge 0
+\)\\
+\(
+L(\lambda) = \lambda^n e^{-\lambda \sum x_i}
+\)\\
+\(
+\log L(\lambda) = n\log\lambda - \lambda \sum x_i
+\)\\
+Differentiate:
+\(
+\frac{d}{d\lambda}\log L(\lambda) = \frac{n}{\lambda} - \sum x_i = 0
+\)\\
+Hence,
+\(
+\hat{\lambda} = \frac{n}{\sum x_i}
+\)\\
+\textit{Example:} For data sum \( \sum x_i = 20 \), \(n = 5\), \(\hat{\lambda} = 0.25\).
+
+\subsection*{Example 3: Normal Distribution (Known Variance)}
+Let \(X_i \sim N(\mu, \sigma^2)\), with known \(\sigma^2\).\\
+\(
+f(x_i | \mu) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left[-\frac{(x_i - \mu)^2}{2\sigma^2}\right]
+\)\\
+\(
+\log L(\mu) = -\frac{n}{2}\log(2\pi\sigma^2) - \frac{1}{2\sigma^2}\sum (x_i - \mu)^2
+\)\\
+Differentiate and set to zero:
+\(
+\frac{d}{d\mu}\log L(\mu) = \frac{1}{\sigma^2}\sum (x_i - \mu) = 0
+\)\\
+Hence,
+\(
+\hat{\mu} = \frac{1}{n}\sum_{i=1}^{n}x_i
+\)\\
+\textit{Example:} For data mean \( \bar{x} = 8.4 \), \(\hat{\mu} = 8.4\).
+
+\subsection*{Uniform Distribution (MLE)}
+
+\(X_1, \ldots, X_n \sim U(a,b)\)
+
+\(
+f(x_1, \ldots, x_n | a, b) \\ =
+\begin{cases}
+\left(\dfrac{1}{b-a}\right)^n, & a \le x_i \le b\\
+0, & \text{otherwise}
+\end{cases}
+\)\\
+
+Maximize by minimizing \(b-a\) such that all \(x_i \in [a,b]\).
+
+\(
+\hat{a} = \min(x_1, \ldots, x_n), \quad
+\hat{b} = \max(x_1, \ldots, x_n)
+\)
