@@ -1,0 +1,29 @@
+\runsec{Fall 2024 Final (with answers).}
+Q1 true/false items live in the T/F Bank above; the worked parts follow.
+
+\runsub{Q1 traversal + heuristics + $\alpha\beta$ + PMX.}
+\textbf{(b)} Asks: for a cost-labelled tree (goal I) give BFS, DFS, UCS, IDS visit order. Method: BFS level order; DFS deepest-first; UCS by cumulative cost; IDS = depth-limited DFS with a rising limit until I appears (see Traversal Example).\\
+\textbf{(c)} Asks: 3-state problem, heuristics I--IV --- circle admissible? consistent?; and any dominance. Only II inadmissible (\(h(B){=}4{>}h^*(B){=}3\)); consistency on edge A--B (cost 2): I \(4{-}1{=}3{>}2\) no, III \(4{-}3{=}1\le2\) yes, IV \(5{-}2{=}3{>}2\) no. III,IV no dominance; IV dominates I.\\
+\textbf{(d)} Asks: run minimax with \(\alpha\beta\) on a game tree, ties left-to-right; mark pruned branches and each node's value/bound. Method: back up max/min, prune a subtree once \(\alpha\ge\beta\); label never-visited leaves as pruned.\\
+\textbf{(e)} Asks: first offspring by (i) Cycle Crossover, (ii) PMX (cuts after locus 2 and 6) on \(p_1{=}475318692,p_2{=}524836971\). PMX \(\Rightarrow425318976\) (procedure above). CX excluded (not on our final).
+
+\runsub{Q2 explore/exploit controls + GA math.}
+\textbf{(a)} Asks: for SA, GA, PSO, GP, Tabu, name the mechanism that controls explore vs exploit. SA: temperature \(T\). GA: mutation/crossover rate + selection pressure. PSO: inertia \(w\) vs cognitive/social pull. GP: crossover/mutation on tree structure + selection. Tabu: tenure (short) vs frequency memory (long).\\
+\textbf{(b)} Asks: genotype vs phenotype (+example); GA vs ES; ES self-adaptation. Genotype = encoded (bit string); phenotype = decoded solution (real \(x\)). ES uses real vectors + Gaussian self-adaptive mutation and \((\mu{+}\lambda)/(\mu,\lambda)\); self-adaptation evolves \(\sigma\) inside the individual.\\
+\textbf{(c)} Asks: binary GA, pop \(N\), mut rate \(\rho\), \(n\) bits --- (i) P(no bit mutates in a generation), (ii) min \(\rho\) for that P \(\le P_{none}\), (iii) numeric for \(N{=}n{=}100,P_{none}{=}0.0001\). (i) \((1-\rho)^{Nn}\); (ii) \(\rho=1-P_{none}^{1/(Nn)}\); (iii) \(\rho\approx0.00092\).
+
+\runsub{Q3 airline crew GA.}
+Setup: 3 planes, 5 crews, one crew/plane/day, no crew \(>2\) days in a row.\\
+\textbf{(a)} Asks: chromosome? 3 genes over \(\{A..E\}\) (position = plane), or a 5-gene binary work/off string. \textbf{(b)} Alphabet + size? 5 letters, or 2 (binary). \textbf{(c)} Fitness? reward valid coverage, penalise rule violations. \textbf{(d)} How many solutions; is GA needed; scaling? grows combinatorially; GA pays off as planes/crews grow.
+
+\runsub{Q4 SA + ES.}
+\textbf{(a)} Asks: guidelines for initial/final SA temperature. Init high enough to reach any state (accept \(\approx\)60\% worse), not pure-random; final need not be 0, stop when frozen. \textbf{(b)} Asks: ways to cut SA compute cost. \(e^{-\Delta/T}\) lookup table, non-exponential acceptance, incremental cost updates. \textbf{(c)} Asks: describe ES + its mutation operator. \((x,\sigma)\), mutate \(x'=x+N(0,\sigma)\), small changes more common. \textbf{(d)} Asks: \((\mu{+}\lambda)\) vs \((\mu,\lambda)\). \(+\): parents+children compete (elitist); comma: only children survive, parents replaced. \textbf{(e)} Asks: Rechenberg \(1/5\) rule + why + params. Keep success ratio \(1/5\); \(>\!1/5\) grow \(\sigma\), \(<\!1/5\) shrink; Schwefel \(c_d{=}0.82,c_i{=}1.22\).
+
+\runsub{Q5 GP for regression.}
+Asks: for fitting a piecewise \(f(x)\), give (a) terminal set, (b) function set, (c) fitness, (d) a GP tree + a mutation on it, (e) the closure property + example. \(T=\{x,\Re\}\) (\(\Re\) const \(\approx[-5,5]\)); \(F=\{+,-,\ast,\cos,\log_{10}\}\); fitness = sum of squared error to target; mutation swaps a random subtree; closure = any \(f\in F\) accepts any \(g\in F\) (untyped), so trees stay valid.
+
+\runsub{Q6 ACO for min $f(x)=x^2-2x-11$ on $(0,3)$.}
+Asks: use ACO (4 ants, evaporation 0.2) for 2 iterations. Discretise \((0,3)\) into candidate points; ants pick with \(P\propto\tau^{\alpha}\eta^{\beta}\), \(\eta\) larger where \(f\) is smaller (min at \(x{=}1,f{=}{-}12\)); each iteration evaporate \(\tau\!\leftarrow\!0.8\tau\) then deposit \(\propto1/f\); after 2 iterations pheromone concentrates near \(x{=}1\).
+
+\runsub{Q7 PSO explained.}
+Asks: (a) explain the velocity equation + all parameters; (b) identify inertia/cognitive/social; (c) show (pseudocode/steps) how PSO solves a given problem. \(v_{t+1}=wv_t+c_1r_1(pbest{-}x)+c_2r_2(gbest{-}x)\), \(x_{t+1}=x_t{+}v_{t+1}\); \(w\) inertia (explore), \(c_1,c_2\) cognitive/social (exploit), \(r_1,r_2\sim U(0,1)\). Loop: init particles, evaluate \(f\), update \(pbest/gbest\), update \(v\) then \(x\), until done; return \(gbest\).

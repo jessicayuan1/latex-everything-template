@@ -1,0 +1,27 @@
+\runsec{Spring 2021 Final (with answers).}
+Q1 true/false items are in the T/F Bank above; worked parts follow.
+
+\runsub{Q1 search + crossover.}
+\textbf{(b)} Asks: which algorithm best manages worst-case time/space, and how? Iterative Deepening --- DFS-like linear memory (no stored frontier) yet never builds paths longer than the shortest solution.\\
+\textbf{(c)} Asks: reorder words of an unknown language using a ``ridiculousness'' score --- search-space size?; define a neighbourhood + 2 examples; will HC / Tabu always find a valid sentence? Space \(=n!\); neighbourhood = swap two words' positions. HC no (local optima); Tabu no either (only optimal as \(t\to\infty\)).\\
+\textbf{(d)} Asks: first offspring by Cycle Crossover and by PMX (cuts after locus 2,6). PMX \(\Rightarrow425318976\); CX excluded (not on our final).\\
+\textbf{(e)} Asks: two parents differ in every bit; 1-point crossover at random \(c\in[1,n]\) --- P(children are clones)? \(=1/n\) (only when the cut is at an extreme end).\\
+\textbf{(f)} Asks: when is exploration vs exploitation more desirable? Exploit when good guesses exist (seed a GA); explore when none exist (use ES).
+
+\runsub{Q2 MDP treasure ($\gamma{=}1$).}
+Setup: collect treasures and return to start within a time budget (else utility \(-\infty\)); a boulder blocks a cell, present w.p.\ 0.5, observed only when adjacent. Asks: \(V^*(S_9),V^*(S_{13}),V^*(S_\infty)\) and the min state-space size. \(V^*(S_9)=20\); \(V^*(S_{13})=\tfrac{40+30}{2}=35\) (peek, else fall back); \(V^*(S_\infty)=10{+}20{+}80+\tfrac{40}{2}+\tfrac{30}{2}+\tfrac{160}{4}=185\); size \(=MN\cdot3^{B}\cdot2^{X}\) (position \(\times\) boulder present/absent/unknown \(\times\) treasure taken/not).
+
+\runsub{Q3 graph search + $h_3$.}
+Setup: undirected graph, start A goal G, \(h_1\) consistent, \(h_2\) not. \textbf{(a)} Asks: which listed paths each of DFS/BFS/UCS/A*(\(h_1\))/A*(\(h_2\)) could return. DFS any; BFS the shallowest A--B--D--G, A--C--D--G; UCS \& both A* the optimal A--B--C--D--F--G. \textbf{(b)} Asks: \(h_3(B)\) values making \(h_3\) admissible / consistent. Admissible \(0\le h_3(B)\le12\); consistent \(9\le h_3(B)\le10\). \textbf{(c)} Asks: \(h_3(B)\) making A* expand A,C,B,D in order. \(12<h_3(B)<13\).
+
+\runsub{Q4 SA + sensor placement.}
+\textbf{(a)} Asks: SA initial/final temperature guidelines. High init (accept \(\approx\)60\% worse, not random); final need not be 0, stop when frozen. \textbf{(b)} Asks: SA speed-ups. lookup table, non-exponential acceptance, incremental cost. \textbf{(c)} Asks: place 5 cameras on \(8\times8\) (gate cells cost \(\times2\)) --- representation, neighbourhood, objective, then run SA (\(T_0{=}500\), linear \(-50\)). Rep = \(m\times3\) array \((x,y,\text{orient})\); neighbours = move/swap/rotate a camera; objective (min) \(=2\times\)(uncovered gate) \(+\) (uncovered other); accept if better else if \(e^{-\Delta/T}>r\).
+
+\runsub{Q5 6-Queens.}
+Setup: one queen per column, Eval = number of non-attacking pairs. \textbf{(a)} states? \(6^6\). \textbf{(b)} successors per state? \(30\) (move one queen in its column). \textbf{(c)} Eval of the shown board? \(9\). \textbf{(d)} FPS probs from Eval \(\{9,12,11,8\}\)? \(\tfrac{9}{40},\tfrac{12}{40},\tfrac{11}{40},\tfrac{8}{40}\). \textbf{(e)} which GA operator is like the successor function? Mutation.
+
+\runsub{Q6 EA/ES/ACO.}
+\textbf{(a)} Asks: EA mutation vs PSO velocity update difference. Mutation = random perturbation; velocity is directed by \(pbest/gbest\). \textbf{(b)} Asks: how ES adapts. Self-adaptation: \(\sigma\) encoded in the individual, evolves with it. \textbf{(c)} ACO TSP (ant at C, visited A, \(\alpha{=}\beta{=}1\), \(\eta{=}1/d\)): asks P to A/B/D, update counts, density vs quantity, \(\alpha{=}0\)/\(\beta{=}0\), variant names. \(P(A){=}0\); \(P(B){=}\tfrac{0.98/6}{0.98/6+0.67/3}{=}0.422\); \(P(D){=}0.578\). Updates/iter (5 ants): step-by-step 15, delayed 5, offline 1. Density adds \(Q\) (ignores length); quantity adds \(Q/d_{ij}\). \(\alpha{=}0\Rightarrow\)greedy heuristic; \(\beta{=}0\Rightarrow\)pure pheromone. Variants: adaptive per-ant=Near-Param-Free ACS; bounded range=MMAS; GA-tuned=ACSGA; pseudo-random/elitist=ACS; delayed-all=AS.
+
+\runsub{Q7 PSO topologies + permutation.}
+\textbf{(a)} Asks: match 5 descriptions to topologies. nearest-in-space(costly)=physical neighbors; fastest spread, easily stuck=star; matrix-adjacent=social neighbors; grid-of-4=Von Neumann; slowest spread, avoids minima=ring. \textbf{(b)} Asks: permutation PSO update (\(w{=}\tfrac13,c{=}2,r{=}0.5\)) --- \(V_2,X_2\). Velocity = swaps: \(V_2=\{(1,3),(2,6),(4,7)\}\); \(X_2=X_1{+}V_2=[2\,6\,1\,7\,5\,4\,8\,3]\).

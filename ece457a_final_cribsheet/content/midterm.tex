@@ -1,0 +1,41 @@
+\section{Pre-Midterm Foundations}
+\subsection*{Problem Formulation}
+Well-structured problem = explicit tuple \(\langle S,s_0,A,T,G,c\rangle\) (states, start, actions, transition, goal test, cost); solution = path \(s_0\!\to\!\cdots\!\to\!s_g\) with \(G(s_g){=}1\). Ill-structured = shifting goals, hidden/incomplete constraints; needs framing + representation first. Hadamard well-posed: a solution (i) exists, (ii) is unique, (iii) is stable (depends continuously on data). Goal formulation (what matters / what to ignore) precedes problem formulation; many ``algorithm failures'' are really formulation failures (bad encoding, misaligned cost).
+
+\subsection*{Optimization as Search}
+\(\min_{x\in X} f(x)\) s.t.\ \(g_i(x)\le0,\ h_j(x)=0\); feasible set \(F=\{x: \text{constraints hold}\}\). Search = evaluate \(f\), pick next via neighbourhood \(N(s)\), stop on budget/target. Exact = optimal but costly; heuristic = cheap, near-optimal, no guarantee.
+
+\subsection*{Constructive vs Local}
+Constructive: build from an empty partial state by a rule (greedy add of components). Local: start from a complete state, apply a move operator, keep if the evaluation improves. Neighbourhood \(N(s)\) = states one move from \(s\); it defines the landscape and what ``improvement'' means.
+
+\subsection*{Constraint Handling}
+Reject illegal moves; Repair/project back to feasible; or Penalty \(f'(x)=f(x)+\lambda\,v(x)\) (\(v\)=violation amount). Keep the policy consistent --- mixing them destabilises the search.
+
+\subsection*{Complexity Classes}
+P: exact poly-time (sort, shortest path, MST). NP: a solution is verifiable in poly-time (SAT, subset-sum). NP-hard: at least as hard as any NP problem, no known poly algorithm (TSP, scheduling, placement). NP-complete: in NP and NP-hard. Blow-up: binary choices \(|S|{=}2^n\); TSP tours \((n{-}1)!/2\); tree search \(O(b^d)\). Verify-easy \(\ne\) discover-easy.
+
+\subsection*{Agent / Environment}
+Dimensions: observable vs partially observable; deterministic vs stochastic; static vs dynamic; discrete vs continuous; single- vs multi-agent; episodic vs sequential. Closed-world assumption = the state description is complete and trustworthy. Goal-based agent stops at the first \(G(s){=}1\); utility-based agent maximises \(U(s)\in\mathbb{R}\).
+
+\subsection*{Performance + State-Space Sizes}
+Completeness = finds a solution if one exists; optimality = returns the least-cost one. \(b\)=branching factor, \(d\)=depth of shallowest goal, \(m\)=max path length. Sizes: 8-puzzle \(9!/2{=}181440\); grid \(m\times n\) minus \(k\) blocked \(=mn{-}k\); symmetric TSP \((n{-}1)!/2\); missionaries/cannibals state \((M_L,C_L,B)\) with per-bank \(M{=}0\) or \(M\ge C\).
+
+\subsection*{Uninformed Search Complexity}
+\resizebox{\linewidth}{!}{%
+\(
+\begin{array}{lcccc}
+ & \text{Compl.} & \text{Opt.} & \text{Time} & \text{Space}\\
+\hline
+\text{BFS} & Y^{b} & Y^{c} & b^{d+1} & b^{d+1}\\
+\text{UCS} & Y & Y & b^{1+C^*/\varepsilon} & b^{1+C^*/\varepsilon}\\
+\text{DFS} & N & N & b^{m} & b\,m\\
+\text{DLS} & Y^{l\ge d} & N & b^{l} & b\,l\\
+\text{IDS} & Y^{b} & Y^{c} & b^{d} & b\,d\\
+\text{Bidir} & Y^{b} & Y^{c} & b^{d/2} & b^{d/2}
+\end{array}
+\)
+}\\
+\(^b\): \(b\) finite. \(^c\): equal/non-decreasing step costs. DLS = DFS with cutoff \(l\) (complete iff \(d\le l\)). Bidirectional searches from both ends and meets in the middle; needs invertible actions and a known goal state.
+
+\subsection*{Minimax \& Beam}
+Minimax: MAX maximises, MIN minimises; back up terminal utilities; optimal against an optimal opponent. Real games cut off at a depth and use an evaluation \(e(p)\) (e.g.\ \(\#\text{open}(X){-}\#\text{open}(O)\)); shallow cutoffs cause the horizon effect. DFS-based: Time \(O(b^m)\), Space \(O(m)\). Beam search keeps only the best \(\beta\) nodes per level \(\Rightarrow\) not complete, not optimal (can discard the goal path).

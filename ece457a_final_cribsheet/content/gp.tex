@@ -1,0 +1,43 @@
+\section{Genetic Programming}
+Evolves executable programs, not fixed vectors. Terminal set \(T\) = variables + constants (e.g.\ \(T=\{x,\Re\}\), \(\Re\) random const in a range); function set \(F\) = operators (e.g.\ \(F=\{+,-,\ast,\cos,\log_{10}\}\)). Fitness = error vs target, e.g.\ sum of squared error over sample points.\\
+Closure: any function in \(F\) can take any other \(F\)/\(T\) output as an argument (untyped), so every tree is valid.\\
+Operators: subtree crossover swaps subtrees between parents; subtree mutation replaces a subtree with a new random one.\\
+Bloat = program size grows without fitness gain. Cause: accumulation of inactive code (introns) / unrestricted crossover inserting large subtrees. Control: parsimony pressure (penalise size in fitness) or a max depth/size limit.
+
+\subsection*{Tree-based GP: \((+\;(\ast\,x\,2)\;(-\,x\,1))\)}
+\fitfig{
+\begin{tikzpicture}[level distance=6mm,level 1/.style={sibling distance=15mm},level 2/.style={sibling distance=7mm}]
+\node[gpnode]{+}
+ child{node[gpnode]{\(\ast\)} child{node[gpnode]{x}} child{node[gpnode]{2}}}
+ child{node[gpnode]{\(-\)} child{node[gpnode]{x}} child{node[gpnode]{1}}};
+\end{tikzpicture}}
+Subtree mutation: replace \((-\,x\,1)\) with \((+\,x\,3)\) \(\Rightarrow (+\;(\ast\,x\,2)\;(+\,x\,3))\):
+\fitfig{
+\begin{tikzpicture}[level distance=6mm,level 1/.style={sibling distance=15mm},level 2/.style={sibling distance=7mm}]
+\node[gpnode]{+}
+ child{node[gpnode]{\(\ast\)} child{node[gpnode]{x}} child{node[gpnode]{2}}}
+ child{node[gpnode]{+} child{node[gpnode]{x}} child{node[gpnode]{3}}};
+\end{tikzpicture}}
+
+\subsection*{Cartesian / Graph GP}
+Nodes form a DAG and intermediate results are reused (not duplicated as in a tree), giving compact models.\\
+\fitfig{
+\begin{tikzpicture}[node distance=6mm and 7mm,font=\tiny]
+\node[gpnode](x1){\(x_1\)};
+\node[gpnode,below=of x1](x2){\(x_2\)};
+\node[gpnode,right=8mm of $(x1)!0.5!(x2)$](p){+};
+\node[gpnode,right=of p](m){\(\times\)};
+\node[gpnode,right=of m](s){\(-\)};
+\node[gpnode,right=of s](y){\(y\)};
+\draw[ed](x1)--(p); \draw[ed](x2)--(p);
+\draw[ed](p)--(m); \draw[ed](x2.east) to[bend right=20] (m.south);
+\draw[ed](m)--(s); \draw[ed](x1.north) to[bend left=25] (s.north);
+\draw[ed](s)--(y);
+\end{tikzpicture}}
+\(+\) gives \(x_1+x_2\); \(\times\) reuses it with \(x_2\Rightarrow(x_1+x_2)x_2\); \(-\) uses \(x_1\Rightarrow y=(x_1+x_2)x_2-x_1\).
+
+\subsection*{GA vs GP search space}
+GA: fixed-length encodings (bit strings, real vectors) \(\Rightarrow\) regular, uniform, easy to parameterise. GP: variable-size executable trees/graphs \(\Rightarrow\) larger, irregular, rugged. Implication: GP search is harder because a small structural change can drastically change behaviour.
+
+\subsection*{Syntax vs Semantics (GSGP)}
+Traditional GP evolves syntax: crossover/mutation edit program structure (tree/graph). Geometric Semantic GP evolves semantics: operators act on program behaviour/output over the data. Implication: semantic operators give a smoother, more predictable landscape (progress toward the target output), but representations can grow very large.

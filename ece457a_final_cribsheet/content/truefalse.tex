@@ -1,0 +1,25 @@
+\section{True/False Bank (answers + why)}
+\textbf{T} = true, \textbf{F} = false.\\
+\textbf{F} A* always expands fewer nodes than UCS --- a misleading heuristic can make A* expand more (e.g.\ \(h\) big on the good branch).\\
+\textbf{T} ES suits problems needing exploration; GA suits problems needing exploitation (seed GA with good guesses).\\
+\textbf{F} \(h(s)=1\) for all non-goal \(s\) is always admissible --- near the goal the true cost can be \(<1\), so it can overestimate.\\
+\textbf{F} BFS and IDS always return the same solution.\\
+\textbf{T} MDPs with small discount \(\gamma\) emphasise near-term rewards.\\
+\textbf{T} BFS is always complete even with unequal action costs (complete = finds \emph{a} solution, not the cheapest).\\
+\textbf{F} If admissible \(h_1(n){=}6,h_2(n){=}8\) then \(h_1\) dominates \(h_2\) --- reversed: \(h_2\) is closer to \(h^*\), so \(h_2\) dominates.\\
+\textbf{T} Value Iteration converges to the optimal policy (Bellman backup is a contraction).\\
+\textbf{T} BFS is optimal when all edge costs are equal.\\
+\textbf{F} DFS \emph{always} uses less memory than BFS.\\
+\textbf{T} An overestimating (inadmissible) heuristic can still be useful in practice (faster, if not too far off).\\
+\textbf{F} Hill climbing guarantees the global optimum.\\
+\textbf{T} SA uses randomness to escape local minima.\\
+\textbf{F} Tabu search uses randomness to escape minima --- it is deterministic, using memory (tabu list).\\
+\textbf{T} Tabu tenure controls how long a move stays forbidden.\\
+\textbf{F} GAs operate on a single candidate at a time --- they keep a population.\\
+\textbf{T} Selection pressure that is too high reduces population diversity (premature convergence).\\
+\textbf{T} No algorithm beats random search without exploiting structure (No Free Lunch).\\
+\textbf{T} If \(h=h^*\) for all \(n\), A* expands only optimal-path nodes (ignoring ties).\\
+\textbf{T} Adding the same positive constant to every arc cost can change the UCS path.\\
+\textbf{F} SA with constant positive \(T\) equals hill climbing (it still accepts worse moves with \(>0\) prob).\\
+\textbf{F} Alpha--beta is ``more accurate'' than minimax --- same value, only faster.\\
+\textbf{T} Beam search (finite width) with an admissible \(h\) may still fail to find any solution.

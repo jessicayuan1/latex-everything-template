@@ -1,0 +1,52 @@
+\begin{tcolorbox}[cheatbox]
+\textbf{ECE 457A Final Cheatsheet}\\
+Metaheuristics: search review, SA, Tabu, ACO, PSO, GA, DE, ES, GP, memetic. Ends with full Winter 2026 + Fall 2024 finals with answers.
+\end{tcolorbox}
+
+\section{Midterm Review (Concepts)}
+Local search keeps one complete state + a move operator (it does not store the path from the start). For \(N\)-queens a board (column-per-row) encoding beats a raw grid --- it removes row/column violations before search starts, and a permutation encoding removes them entirely (no repeated row or column), shrinking the infeasible space. Everything else (BFS/DFS/UCS/DLS/IDS, beam, admissibility, \(\alpha\beta\)) is in Foundations, the T/F Bank, and Heuristic Search below.
+
+\section{Heuristic Search (Q1 fair game)}
+\subsection*{Greedy vs A*}
+Greedy: \(f(n)=h(n)\). A*: \(f(n)=g(n)+h(n)\) = real cost so far + estimated cost remaining.\\
+A* keeps a running \(f(n)\) on the frontier and always pops the smallest, so it needs the true cheapest route only, not the whole graph. \(g\) is distance already travelled; \(h\) estimates the rest.
+
+\subsection*{Admissible vs Consistent}
+Admissible: \(h(n)\le h^*(n)\) for all \(n\).\\
+Consistent (monotone): \(h(n)\le c(n,n')+h(n')\) for every edge \(n\!\to\!n'\); consistent \(\Rightarrow\) admissible.\\
+When \(h(\text{goal})=0\), checking direct-to-goal edges is the same as checking admissibility; the interior edges test consistency.
+
+\subsection*{Dominance}
+If \(h_2(n)\ge h_1(n)\) for all \(n\) and both are admissible, \(h_2\) dominates \(h_1\): it is more informed and A* with \(h_2\) expands \(\le\) the nodes of \(h_1\). No dominance if neither is pointwise \(\ge\) the other.
+
+\subsection*{Alpha--Beta Pruning}
+\(\alpha\) = best (max) value MAX can guarantee so far; \(\beta\) = best (min) value MIN can guarantee.\\
+Prune a subtree when \(\alpha\ge\beta\) (it can no longer change the backed-up value). Best-first move ordering gives worst case \(O(b^d)\to O(b^{d/2})\), doubling reachable depth.
+
+\subsection*{Alpha--Beta Example (left--right)}
+Root MAX, two MIN children L,R.\\
+L sees 3,12,8 \(\Rightarrow\) L\(=3\), so \(\alpha=3\) at root.\\
+R sees its first child \(2\Rightarrow\beta=2\); since \(\alpha=3\ge\beta=2\), prune R's remaining children (they cannot raise R above 2). Root \(=\max(3,2)=3\).
+
+\subsection*{Traversal Example (goal G)}
+\fitfig{
+\begin{tikzpicture}[font=\tiny,level distance=8mm,level 1/.style={sibling distance=18mm},level 2/.style={sibling distance=8mm}]
+\node[snode]{A}
+ child{node[snode]{B}
+   child{node[snode]{D} edge from parent node[left,font=\tiny]{2}}
+   child{node[snode]{E} edge from parent node[right,font=\tiny]{4}}
+   edge from parent node[left,font=\tiny]{1}}
+ child{node[snode]{C}
+   child{node[snode]{F} edge from parent node[left,font=\tiny]{1}}
+   child{node[snode]{G} edge from parent node[right,font=\tiny]{5}}
+   edge from parent node[right,font=\tiny]{3}};
+\end{tikzpicture}}
+Path costs: \(g(B){=}1,g(C){=}3,g(D){=}3,g(F){=}4,g(E){=}5,g(G){=}8\). Ties broken alphabetically.\\
+BFS (level order): A B C D E F G.\\
+DFS (deepest, left first): A B D E C F G.\\
+UCS (increasing \(g\)): A B C D F E G; returns A--C--G, cost 8.\\
+IDS (re-run with depth limit \(0,1,2\)): \([A]\), \([A B C]\), \([A B D E C F G]\) --- DFS memory, BFS-style shallowest goal.
+
+\subsection*{PMX Procedure (permutation)}
+1) Pick two cut points; copy the middle segment of \(P_1\) straight into the child. 2) For each value in \(P_2\)'s segment not yet in the child, follow the \(P_1\!\leftrightarrow\!P_2\) mapping (from the aligned segment) until you land on a free position, and place it there. 3) Fill all remaining slots directly from \(P_2\).\\
+Example, cuts after locus 2 and 6: \(P_1{=}47|5318|692\), \(P_2{=}52|4836|971\). Copy \(5318\); map \(5{\leftrightarrow}4,3{\leftrightarrow}8,1{\leftrightarrow}3,8{\leftrightarrow}6\); resolve \(\Rightarrow\) child \(=42\,5318\,976\). Swap mutation keeps it a valid permutation. (Cycle crossover is not on our final.)

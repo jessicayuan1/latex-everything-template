@@ -1,0 +1,34 @@
+\section{Two-Player Game Search}
+
+\subsection*{Minimax}
+MAX (us) maximises, MIN (opponent) minimises; players alternate.\\
+Back up values from terminals: MAX node = \(\max\) of children; MIN node = \(\min\) of children.\\
+Optimal vs an optimal opponent; minimises the maximum loss the opponent can force.\\
+Real games: cut off at depth, use evaluation \(e(p)\) (e.g. \( e=\#\text{open}(X)-\#\text{open}(O) \)); horizon effect.\\
+DFS-based: Time \( O(b^m) \), Space \( O(m) \). TTT \(b\!\approx\!5,d\!=\!9\); checkers \(b\!\approx\!35\).
+
+\subsection*{Minimax Tree (root = 3)}
+\fitfig{
+\begin{tikzpicture}[level distance=9mm,level 1/.style={sibling distance=20mm},level 2/.style={sibling distance=7mm}]
+\node[mx]{3}
+ child{node[mn]{3}
+   child{node[snode]{3}}
+   child{node[snode]{12}}
+   child{node[snode]{8}}}
+ child{node[mn]{2}
+   child{node[snode]{2}}
+   child{node[snode]{4}}
+   child{node[snode]{6}}};
+\end{tikzpicture}}
+MIN picks \(\{3,2\}\); MAX picks \(\max(3,2)=3\). (box = MAX, diamond = MIN.)
+
+\subsection*{Alpha-Beta Pruning}
+\( \alpha \)= best (max) value MAX can guarantee so far; \( \beta \)= best (min) value MIN can guarantee.\\
+Prune subtree when \( \alpha\ge\beta \) (cannot affect the result).\\
+Same value as minimax; move ordering is decisive.\\
+Worst case \( O(b^d) \); perfect ordering \( O(b^{d/2}) \), so effective branching \( \approx\sqrt{b} \) \(\Rightarrow\) doubles reachable depth for same cost.
+
+\subsection*{Alpha-Beta on Tree Above}
+Left MIN returns 3 \(\Rightarrow \alpha=3\) at the root.\\
+Right MIN examines its first child 2 \(\Rightarrow \beta=2\); since \(\alpha=3\ge\beta=2\), prune its remaining children (the 4 and 6 are never examined).\\
+Lesson: order best moves first to maximise pruning.

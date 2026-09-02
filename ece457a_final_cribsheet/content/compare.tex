@@ -1,0 +1,60 @@
+\section{Metaheuristic Comparison}
+\subsection*{Explore vs Exploit Control}
+\resizebox{\linewidth}{!}{%
+\(
+\begin{array}{lll}
+\text{Method} & \text{Explore knob} & \text{Exploit knob}\\
+\hline
+\text{SA} & \text{high }T & \text{low }T\\
+\text{Tabu} & \text{freq.\ memory} & \text{best-move pick}\\
+\text{ACO} & \text{evaporation }\rho,\beta & \text{pheromone }\alpha\\
+\text{PSO} & \text{inertia }w & \text{cog.+soc.\ pull}\\
+\text{GA} & \text{mutation, }p_c & \text{selection, elitism}\\
+\text{DE} & \text{scale }F & \text{greedy select}\\
+\text{ES} & \text{large }\sigma & \text{small }\sigma\\
+\text{Memetic} & \text{EA operators} & \text{local search}
+\end{array}
+\)
+}\\
+Population methods (GA, ACO, PSO, DE, ES): many candidates, built-in diversity, escape local optima. Trajectory methods (HC, SA, Tabu): one state, cheap, need memory/randomness to escape.
+
+\subsection*{Search Landscape (intuition)}
+\fitfig{
+\begin{tikzpicture}[font=\tiny,scale=1.0]
+\draw[->,thick] (0,0)--(0,2.4) node[left]{\(f\)};
+\draw[->,thick] (0,0)--(4.5,0) node[right]{\(x\)};
+\draw[myblue,very thick,smooth] plot coordinates
+ {(0.3,2.05)(1.2,1.05)(2.1,1.8)(3.2,0.3)(4.2,1.25)};
+\filldraw[myred] (1.2,1.05) circle (1.3pt);
+\node[myred,left=1pt] at (1.2,1.05){local};
+\filldraw[myblue] (3.2,0.3) circle (1.3pt);
+\node[myblue,below=1pt] at (3.2,0.3){global};
+\draw[->,myblue,thick] (1.2,1.7)--(1.2,1.2);
+\node[myblue,right] at (1.2,1.48){exploit};
+\draw[->,myred,thick] (1.6,1.7) to[bend left=25] node[above]{explore} (2.8,1.05);
+\end{tikzpicture}}
+Minimisation: exploitation descends within a basin (local opt); exploration hops over the hill to the global opt. High \(T\)/mutation/inertia widen the hops; greedy/local moves deepen the current basin.
+
+\runsub{Which Algorithm When.}
+Continuous, smooth, differentiable: local search / gradient beats metaheuristics (No Free Lunch: no method wins everywhere).\\
+Combinatorial routing / assignment / TSP / cell placement: ACO (incremental construction over a graph) or GA with permutation encoding.\\
+Continuous multimodal function optimisation: PSO or DE (both move by population geometry).\\
+Symbolic model / equation discovery from data: GP (evolves executable structure).\\
+Hard structure + smooth parameters: memetic (GP or GA for structure, local search for parameters).\\
+Real-vector optimisation with self-tuned steps: ES with \(1/5\) rule or covariance adaptation.
+
+\runsub{GP Loop (pseudocode).}
+\texttt{init random pop of trees}\\
+\texttt{while not done:}\\
+\quad\texttt{fitness[i] = error(tree[i], data)}\\
+\quad\texttt{parents = select(pop, fitness)}\\
+\quad\texttt{child = subtree\_crossover(p1,p2)}\\
+\quad\texttt{child = subtree\_mutation(child)}\\
+\quad\texttt{pop = replace(pop, child)}\\
+\texttt{return best tree}\\
+Building blocks = useful subtrees; closure keeps every generated tree evaluable.
+
+\subsection*{Extra Formulas \& Reminders}
+SA cooling: geometric \(T_{k+1}=\alpha T_k\) (\(0.8\le\alpha<1\)), linear \(T_k=T_0-k\beta\), logarithmic \(T_k=T_0/\log(1+k)\) (only log guarantees asymptotic global convergence, but is impractically slow).\\
+GA selection: roulette \(p_i=f_i/\sum_j f_j\) (scale-sensitive, weak late); tournament = best of \(k\) random (pressure rises with \(k\), needs no scaling); rank-based uses order only (scale/translation invariant); SUS = evenly spaced pointers; elitism keeps best \(E\).\\
+All metaheuristics are anytime: termination (max generations/evaluations, convergence, or hitting a target) never implies optimality. UCS and A* goal-test on expansion, not generation. Alpha--beta returns exactly the minimax value. Greedy, beam, and hill climbing are neither complete nor optimal.

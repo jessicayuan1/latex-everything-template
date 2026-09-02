@@ -1,0 +1,37 @@
+\section{Informed (Heuristic) Search}
+
+\subsection*{Heuristics}
+\( h(n) \)= estimated cost from \(n\) to nearest goal; \( h(n)\ge0 \), \( h(\text{goal})=0 \).\\
+True cost \( h^*(n) \)= minimal cost \(n\!\to\!\) goal.\\
+Admissible: never overestimates, \( h(n)\le h^*(n) \).\\
+Consistent (monotone): \( h(n)\le c(n,n')+h(n') \). Consistent \(\Rightarrow\) admissible (not vice versa); then \(f=g+h\) never decreases along a path.\\
+Null \( h=0 \): admissible, acts like UCS. Perfect \( h=h^* \): expands only optimal-path nodes.\\
+Dominance: if \( h_1(n)\le h_2(n)\le h^*(n)\;\forall n \), then \(h_2\) better-informed; \(A^*\) with \(h_2\) expands \(\subseteq\) nodes of \(h_1\).\\
+Derive \(h\) by relaxation of constraints. 8-puzzle: \(h_1\)=misplaced tiles, \(h_2\)=Manhattan dist (\(h_2\) dominates).
+
+\subsection*{Best-First / Greedy}
+Best-first: order fringe by evaluation \( f(n) \) (priority queue).\\
+Greedy best-first: \( f(n)=h(n) \) only.\\
+Not complete (loops), not optimal; Time/Space \( O(b^{m+1}) \) worst, good \(h\) helps a lot.
+
+\subsection*{Beam Search}
+Informed BFS keeping only best \( \beta \) nodes per level (beam width); \( f(n)=h(n) \).\\
+Not complete, not optimal, not admissible; may discard a solution-path node.\\
+Time \( O(\beta d) \), Space \( O(\beta d) \).
+
+\subsection*{A* Search}
+\( f(n)=g(n)+h(n) \): path-so-far + estimate-to-go.\\
+Optimal if \(h\) admissible (tree search) / consistent (graph search); complete; optimally efficient (no same-\(h\) algorithm expands fewer nodes).\\
+Limitation: nodes in goal contour still exponential for most problems.
+
+\subsection*{A* Worked Example}
+Start \(A\), goal \(J\). \( f=g+h \):\\
+\( f(B)=6+8=14,\; f(F)=3+6=9 \Rightarrow F \).\\
+\( f(G)=(3{+}1)+5=9,\; f(H)=(3{+}7)+3=13 \Rightarrow G \).\\
+\( f(I)=(3{+}1{+}3)+1=8 \Rightarrow I \).\\
+\( f(J)=(3{+}1{+}3{+}3)+0=10 \Rightarrow J \).\\
+Path \( A\!\to\!F\!\to\!G\!\to\!I\!\to\!J \).
+
+\subsection*{Informed vs Uninformed}
+Uninformed: only problem definition.\\
+Informed: extra goal-direction info via \(h(n)\); closer \(h\) to \(h^*\) \(\Rightarrow\) fewer expansions.

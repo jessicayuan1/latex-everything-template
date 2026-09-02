@@ -1,0 +1,33 @@
+\section{Simulated Annealing}
+Accept a neighbour \(s'\) with cost change \(\Delta E=E(s')-E(s)\) (minimisation):\\
+\(P=\begin{cases}1 & \Delta E\le 0\\ e^{-\Delta E/T} & \Delta E>0\end{cases}\)\\
+Draw \(r\sim U(0,1)\); accept the worse move iff \(r\le P\). Useful values: \(e^{-1}\!\approx\!0.37\), \(e^{-2}\!\approx\!0.14\).\\
+High \(T\): most uphill moves accepted \(\Rightarrow\) exploration (early). Low \(T\): rarely accept worse \(\Rightarrow\) exploitation, behaves like hill climbing (late). Cooling e.g.\ geometric \(T\leftarrow\alpha T\).\\
+Init \(T\) high enough to reach almost any state (accept \(\approx\)60\% of worse moves), but not so hot it is pure random walk; use the max cost change as a guide. Stop when \(T\) is low and no better/worse moves are accepted (frozen). Constant positive \(T\) is not hill climbing (still accepts worse with \(>0\) prob).
+
+\subsection*{SA Example (min \(f(x)=x^2\), start \(x{=}2\))}
+Iter 1: \(x'{=}3\), \(\Delta=9-4=5>0\), \(T_1{=}5\): \(P=e^{-5/5}=e^{-1}=0.37\); \(r_1{=}0.3<0.37\Rightarrow\) accept.\\
+Iter 2: \(x'{=}4\), \(\Delta=16-4=12>0\), \(T_2{=}6\): \(P=e^{-12/6}=e^{-2}=0.14\); \(r_2{=}0.8>0.14\Rightarrow\) reject.
+
+\subsection*{SA Acceptance Curve}
+\fitfig{
+\begin{tikzpicture}[scale=1]
+\draw[->] (0,0)--(3.4,0) node[right,font=\tiny]{\(\Delta E\)};
+\draw[->] (0,0)--(0,2.0) node[above,font=\tiny]{\(P\)};
+\draw[myblue,thick,domain=0:3.2,samples=40] plot (\x,{1.8*exp(-\x)});
+\draw[myred,thick,dashed,domain=0:3.2,samples=40] plot (\x,{1.8*exp(-\x/0.4)});
+\node[font=\tiny,myblue] at (2.5,0.55){high \(T\)};
+\node[font=\tiny,myred] at (1.0,0.12){low \(T\)};
+\end{tikzpicture}}
+Higher \(T\) flattens \(P=e^{-\Delta E/T}\) so more uphill moves pass.
+
+\section{Tabu Search}
+Deterministic; escapes local optima via memory, not randomness. Each step pick the best admissible neighbour (even if worse than current), then update the tabu list and best-so-far.\\
+Short-term (recency) memory: forbid recently used move attributes for a tabu tenure, preventing immediate cycling. Long-term (frequency) memory: penalise often-used moves \(\Rightarrow\) diversification into unvisited regions.\\
+Aspiration: override a tabu move if it beats the best-so-far \(E(s')<E(s^*)\).\\
+Tenure too short \(\Rightarrow\) cycles; too long \(\Rightarrow\) over-restricted.
+
+\subsection*{TS Example (min \(f(x)=x^2\), tabu size 2)}
+Start \(x{=}4\); sequence \(4\!\to\!3\!\to\!2\!\to\!3\).\\
+After \(4\!\to\!3\): tabu list \([4]\). After \(3\!\to\!2\): tabu list \([4,3]\).\\
+At \(x{=}2\) best candidate is \(x{=}3\): \(f(3)=9>f(2)=4\) (not improving) and \(3\) is tabu; no aspiration met \(\Rightarrow\) reject the move. Short-term memory blocks the \(2\!\to\!3\) cycle; long-term memory would push the search elsewhere.

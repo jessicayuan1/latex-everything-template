@@ -1,0 +1,58 @@
+\begin{tcolorbox}[cheatbox]
+\textbf{ECE 457A Midterm Cheatsheet}\\
+Search \& Metaheuristics. Covers: foundations, uninformed/informed search, minimax, HC/SA/Tabu, GA.
+\end{tcolorbox}
+
+\section{Foundations \& Problem Solving}
+
+\subsection*{Well- vs Ill-Structured}
+Well-structured: state space, initial state, operators, goal test, cost all explicit; problem tuple \( P=(S,s_0,A,G,c) \).\\
+Solution: path \( s_0\!\to\!s_1\!\to\!\cdots\!\to\!s_g \) with \( G(s_g)=1 \).\\
+Ill-structured: goals shift, constraints incomplete/hidden, path unclear; needs framing + representation first.\\
+Hadamard well-posed: solution (i) exists, (ii) unique, (iii) stable (depends continuously on data).
+
+\subsection*{Optimization as Search}
+\(\min_{x\in X} f(x)\)\\
+s.t. \(g_i(x)\le 0,\; h_j(x)=0\).\\
+Feasible set \(F=\{x\in X\mid g_i(x)\le0,\,h_j(x)=0\}\).\\
+Search = iterative loop: evaluate \(f(\cdot)\), pick next via neighbourhood \(N(\cdot)\), stop on budget/target.\\
+Exact: optimal but costly. Approximate/heuristic: near-optimal, cheap, no optimality guarantee.
+
+\subsection*{Complexity (engineering)}
+P: exact poly-time \( O(n^k) \) (sort, shortest path, MST).\\
+NP: solution verifiable in poly-time (SAT, subset-sum).\\
+NP-hard: \(\ge\) hardest NP, no known poly algorithm (TSP, scheduling, placement).\\
+NP-complete: in NP and NP-hard.\\
+Blow-up: binary choices \( |S|=2^n \); TSP tours \( |S|=(n-1)!/2 \); tree search \( O(b^d) \).\\
+Verify-easy \(\neq\) discover-easy: trade solution quality \(\leftrightarrow\) time/memory/evaluations.
+
+\subsection*{Constructive vs Local}
+Constructive: build from empty partial state, add components by a rule (greedy).\\
+Local search: start from a complete state, apply move operator, keep if evaluation improves.\\
+Neighbourhood \( N(s)=\{ \) states reachable from \(s\) by one move \(\} \); defines landscape + ``improvement''.
+
+\subsection*{Goal then Problem Formulation}
+Goal formulation (first): decide what matters / what to ignore; defines termination.\\
+Problem formulation: specify \( \langle S,s_0,A,T,G,c\rangle \) + representation.\\
+Many ``algorithm failures'' are really formulation failures (bad encoding, weak/strong actions, misaligned cost).
+
+\subsection*{Constraint Handling}
+Reject illegal moves; Repair/project to feasible; Penalty \( f'(x)=f(x)+\lambda\,v(x) \) (\(v\)=violation).\\
+Be consistent: mixed policies destabilise search.
+
+\subsection*{Agent / Environment Dimensions}
+Observable vs partially observable; deterministic vs stochastic; static vs dynamic; discrete vs continuous; single- vs multi-agent; episodic vs sequential.\\
+Closed-World Assumption: state description complete + trustworthy (full obs., deterministic, sequential, static).\\
+Goal-based: stop at first \(G(s)=1\). Utility-based: maximise \( U(s)\in\mathbb{R} \).
+
+\subsection*{Performance Measures}
+Completeness: finds a solution if one exists.\\
+Optimality: finds the least-cost solution.\\
+Time / Space complexity in: \(b\)=branching factor, \(d\)=depth of shallowest goal, \(m\)=max path length.\\
+State-space size proxy \( |V|+|E| \).
+
+\subsection*{Example State-Space Sizes}
+8-puzzle: \( |S|=9!/2=181440 \) (parity-reachable half).\\
+Grid \(m\times n\), \(k\) blocked: \( |S|=mn-k \).\\
+Symmetric TSP: \( |S|=(n-1)!/2 \).\\
+Missionaries/cannibals: state \((M_L,C_L,B)\), constraint per bank \(M{=}0\) or \(M\ge C\).

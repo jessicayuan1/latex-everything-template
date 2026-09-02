@@ -1,0 +1,26 @@
+\section{Ant Colony Optimization}
+Stigmergy: ants deposit pheromone on edges (indirect, shared memory); others are biased toward stronger trails. Solutions are built incrementally; good ones self-reinforce, poor ones fade by evaporation.\\
+Transition probability from \(i\) to feasible \(j\):\\
+\(P(i\!\to\!j)=\dfrac{\tau_{ij}^{\alpha}\,\eta_{ij}^{\beta}}{\sum_{k}\tau_{ik}^{\alpha}\,\eta_{ik}^{\beta}}\)\\
+\(\tau\) = pheromone (learned collective experience), \(\eta=1/d\) = heuristic desirability (problem-specific). \(\alpha\!\gg\!\beta\): pheromone dominates (follow reinforced edges); \(\beta\!\gg\!\alpha\): heuristic dominates (greedy local).\\
+Update each iteration: evaporate then reinforce,\\
+\(\tau_{ij}\leftarrow(1-\rho)\tau_{ij}+\sum_k\Delta\tau_{ij}^{k}\), \(\Delta\tau_{ij}^{k}=Q/L_k\) if ant \(k\) used edge \((i,j)\).\\
+Evaporation (rate \(\rho\)) is negative feedback: it removes early accidental trails and keeps the colony adaptive. Concentrating pheromone on one edge \(\Rightarrow\) benefit: fast convergence/exploitation of a good edge; drawback: lost exploration / premature convergence.\\
+Applications (fair game): TSP, routing, scheduling, cell/facility assignment. A direct implementation is not examined, but ``which of X/Y/Z suits this problem'' is.
+
+\subsection*{ACO Example (ant at S, \(\alpha{=}\beta{=}1\))}
+\(\tau_{SA}{=}2,\tau_{SB}{=}1,\tau_{SC}{=}1\); \(\eta_{SA}{=}1,\eta_{SB}{=}2,\eta_{SC}{=}1\).\\
+Weights \(w_A=2\!\cdot\!1=2\), \(w_B=1\!\cdot\!2=2\), \(w_C=1\!\cdot\!1=1\); sum \(=5\).\\
+\(P(A)=\tfrac25,\;P(B)=\tfrac25,\;P(C)=\tfrac15\). A and B tie (A has pheromone, B has heuristic; equal weights).
+
+\section{Particle Swarm Optimization}
+Each particle keeps position \(x_i\), velocity \(v_i\), personal best \(pbest\), swarm best \(gbest\).\\
+\(v_{t+1}=w\,v_t+c_1 r_1(pbest-x_t)+c_2 r_2(gbest-x_t)\), then \(x_{t+1}=x_t+v_{t+1}\).\\
+Inertia \(w v_t\): keeps previous motion / momentum \(\Rightarrow\) exploration. Cognitive \(c_1 r_1(pbest-x_t)\): pull to own best \(\Rightarrow\) individual exploitation. Social \(c_2 r_2(gbest-x_t)\): pull to swarm best \(\Rightarrow\) collective exploitation/convergence. \(r_1,r_2\sim U(0,1)\).\\
+Clamp speed to \(V_{max}\): too large overshoots optima; too small stalls.\\
+Constriction PSO: \(v_{t+1}=\chi\big[v_t+c_1r_1(pbest-x_t)+c_2r_2(gbest-x_t)\big]\), \(\chi=\dfrac{2}{|2-\varphi-\sqrt{\varphi^2-4\varphi}|}\), \(\varphi=c_1+c_2>4\). \(\chi\) shrinks the whole update so velocity cannot explode \(\Rightarrow\) damped, controlled trajectories and stable convergence.
+
+\subsection*{PSO Example (min \(f(x)=x^2\))}
+\(x_t{=}4,v_t{=}-1,pbest{=}3,gbest{=}1,w{=}c_1{=}c_2{=}r_1{=}r_2{=}1\).\\
+\(v_{t+1}=(-1)+(3-4)+(1-4)=-1-1-3=-5\).\\
+\(x_{t+1}=4+(-5)=-1\). It jumps from \(4\) past the minimiser \(0\) to \(-1\) \(\Rightarrow\) overshoot (combined pull too strong for one step).

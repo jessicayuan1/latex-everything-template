@@ -1,0 +1,70 @@
+\section{Trajectory Metaheuristics}
+
+A trajectory method = (i) representation \(s\), (ii) neighbourhood \(N(s)\), (iii) acceptance/memory control. The move operator decides which local optima are reachable.
+
+\subsection*{Hill Climbing}
+Move to best neighbour: \( s_{k+1}\in\arg\min_{s'\in N(s_k)} E(s') \) (descent) until no improvement.\\
+Variants: simple/first-choice (take first improving), steepest-ascent (best neighbour), stochastic, random-restart.\\
+Fails on: local optima, plateaus (flat), ridges. Fixes: restarts, sideways moves, larger \(N\).\\
+NOT complete, NOT optimal; Time \( O(\infty) \), Space \( O(b) \).
+
+\subsection*{Simulated Annealing}
+Accept neighbour \(s'\) with \( \Delta E=E(s')-E(s) \):\\
+\(
+P=\begin{cases}1 & \Delta E\le 0\\ e^{-\Delta E/T} & \Delta E>0\end{cases}
+\)\\
+(minimisation; flip sign of \(\Delta E\) for maximisation). Draw \( u\sim U(0,1) \), accept if \( u\le P \).\\
+High \(T\): explore (accept many worse moves). Low \(T\): exploit (\(\to\) hill climbing).\\
+Cooling: geometric \( T\leftarrow\alpha T \) (\(0{<}\alpha{<}1\)), linear, or logarithmic. Reheating escapes stagnation.\\
+Analogy: cooling metal to a low-energy crystal. Markov-chain convergence to global opt with slow enough schedule.
+
+\subsection*{SA Acceptance Example}
+\( e^{-0.2}\approx 0.818 \).\\
+For \( \Delta E=2 \): \(T{=}5\!:e^{-0.4}{=}0.67\); \(T{=}1\!:e^{-2}{=}0.135\); \(T{=}0.1\!:e^{-20}\!\approx\!0\).\\
+Lower \(T\) \(\Rightarrow\) worse moves rarely accepted.\\
+Accept/reject (min), \(E(s){=}10,\,E(s'){=}13,\,\Delta E{=}3\):\\
+\(T{=}10\!:P=e^{-0.3}=0.74\), draw \(u{=}0.5\le0.74\Rightarrow\) accept.\\
+\(T{=}1\!:P=e^{-3}=0.05\), draw \(u{=}0.5>0.05\Rightarrow\) reject.
+
+\subsection*{SA Acceptance Curve}
+\fitfig{
+\begin{tikzpicture}[scale=1]
+\draw[->] (0,0)--(3.2,0) node[right,font=\tiny]{\(\Delta E\)};
+\draw[->] (0,0)--(0,2.0) node[above,font=\tiny]{\(P\)};
+\draw[myblue,thick,domain=0:3,samples=40] plot (\x,{1.8*exp(-\x)});
+\draw[myred,thick,dashed,domain=0:3,samples=40] plot (\x,{1.8*exp(-\x/0.4)});
+\node[font=\tiny,myblue] at (2.4,0.5){high \(T\)};
+\node[font=\tiny,myred] at (1.0,0.15){low \(T\)};
+\end{tikzpicture}}
+\( P=e^{-\Delta E/T} \): higher \(T\) flattens the curve (more uphill moves accepted).
+
+\subsection*{Tabu Search (TS)}
+Deterministic; escapes minima via memory not randomness.\\
+Candidate set \( C(s)=(N(s)\setminus T)\cup A(s) \): non-tabu neighbours plus aspirated moves.\\
+Each step: evaluate \(N(s)\), pick best admissible move (even if worse), update tabu list + best-so-far.\\
+Tabu (short-term/recency): forbids recently used move attributes for a tabu tenure (e.g. swap matrix \( \text{Tabu}(i,j)\leftarrow T \), decrement each iteration; tabu while \(>0\)).\\
+Aspiration: override tabu if move beats best-so-far \( E(s')<E(s^*) \) (permission, not forced selection).\\
+Long-term/frequency memory: penalise often-used attributes \( \text{Score}=\text{Value}+F(i,j) \) \(\Rightarrow\) diversification. Recency-based intensification fixes persistent components.\\
+Tabu prevents cycling, not progress. Tenure too short \(\Rightarrow\) cycles; too long \(\Rightarrow\) over-restriction (adapt between \(L_{min},L_{max}\)).
+
+\subsection*{TS Tiny-TSP Example (2-opt)}
+\( s_0{=}A\text{-}B\text{-}D\text{-}C\text{-}E\text{-}A,\;E{=}25 \). Move: cut \((B,D),(C,E)\), add \((B,C),(D,E)\):\\
+\( E(s_1)=25-(6{+}4)+(2{+}2)=19 \); Tabu \(\leftarrow\{(B,C),(D,E)\}\), tenure \(L{=}2\).\\
+Next iter: reverse move removes tabu edges \(\Rightarrow\) blocked; best admissible \(\to E=23\) (worse, but avoids cycling).
+
+\subsection*{TS Aspiration Example}
+\(E(s_k){=}20\), best \(E(s^*){=}19\). Candidates: \(m_1\)(tabu,17), \(m_3\)(18), \(m_4\)(21).\\
+\(m_1\) is tabu but \(17<19\Rightarrow\) aspiration accepts \(m_1\).
+
+\subsection*{Trajectory Comparison}
+\resizebox{\linewidth}{!}{%
+\(
+\begin{array}{lcc}
+\text{Method} & \text{Uphill?} & \text{Memory}\\
+\hline
+\text{Hill Climb} & \text{no} & \text{none}\\
+\text{Sim. Anneal} & \text{prob.} & \text{none}\\
+\text{Tabu} & \text{strategic} & \text{short/long}
+\end{array}
+\)
+}

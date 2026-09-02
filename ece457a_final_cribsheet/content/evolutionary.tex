@@ -1,0 +1,29 @@
+\section{Genetic Algorithms}
+Population \(P(t)=\{x_1,\dots,x_N\}\); parallelism + diversity escape local optima. Cycle: init \(\to\) evaluate \(\to\) \{select \(\to\) crossover \(\to\) mutation \(\to\) replace \(\to\) evaluate\}. GA = variation (crossover, mutation) + selection.\\
+Genotype = encoded form operators act on; phenotype = decoded solution; fitness \(f(x)\) = scalar quality, the only feedback.\\
+FPS / roulette: \(p_i=f_i/\sum_j f_j\); higher fitness \(\Rightarrow\) more likely. Crossover recombines existing material only (no new alleles). Mutation \(p_m\approx1/L\) injects diversity. Selection exploits; crossover explores building blocks; mutation refines/diversifies.\\
+Elitism: copy top \(k\) unchanged. Increasing \(k\) raises selection pressure: \(+\) faster convergence / preserves strong building blocks; \(-\) loss of diversity, premature convergence.\\
+No Free Lunch: averaged over all problems no search beats random; gains come from representation, operators, selection, and fitness matched to the problem.
+
+\subsection*{GA Example (max \(f{=}x^2\), 3-bit)}
+\(P=\{001,011,100,110\}\to x=\{1,3,4,6\}\to f=\{1,9,16,36\}\).\\
+FPS ranking \(110>100>011>001\). With crossover only (no mutation) the population converges toward \(110\): selection amplifies the fittest, crossover cannot restore lost diversity.
+
+\section{Differential Evolution}
+Mutation is population-driven and directional (not independent random noise): scaled difference of members.\\
+Mutant vector \(v=x_{r1}+F(x_{r2}-x_{r3})\), \(F\) = scale factor; the step follows the geometry of the current population.\\
+Trial vector = crossover of mutant \(v\) with target \(x_i\) (some genes from each). Selection is greedy: keep trial iff its fitness beats the target, else target survives.\\
+Contrast: GA mutation = random bit flip / small perturbation; ES mutation = Gaussian noise scaled by a step size; DE mutation = scaled difference of individuals.
+
+\section{Evolution Strategies}
+Individual \(v=(x,\sigma)\): real object vector \(x\) plus strategy parameters \(\sigma\). Mutation \(x'=x+N(0,\sigma)\) (small changes more common than large).\\
+Adaptation at three levels: (1) object variables \(x\) move the search point; (2) step sizes \(\sigma\) set mutation scale (large \(\Rightarrow\) explore, small \(\Rightarrow\) fine local search); (3) orientation via covariance/correlated mutation aligns the mutation distribution with the landscape (concept only). Self-adaptation: \(\sigma\) is encoded in the individual and evolves with it.\\
+\((\mu+\lambda)\): \(\mu\) parents make \(\lambda\) offspring; best \(\mu\) of the combined \(\mu+\lambda\) survive (elitist). \((\mu,\lambda)\), \(\lambda>\mu\): only offspring compete, parents fully replaced each generation. Classic \((1+1)\)-ES: one parent, one child.\\
+Rechenberg \(1/5\) rule: aim for a \(1/5\) ratio of successful mutations. If \(\varphi>1/5\) increase \(\sigma\) (\(\sigma c_i\), \(c_i>1\)); if \(\varphi<1/5\) decrease (\(\sigma c_d\), \(c_d<1\)); many successes \(\Rightarrow\) take bigger steps, few \(\Rightarrow\) smaller steps.
+
+\subsection*{Evolution Symbols (intuition)}
+\(\mu\) = number of parents; \(\lambda\) = number of offspring made per generation. \(+\) means parents and children compete together (elitist, best never lost); the comma means only children compete (parents die each generation, easier to escape a bad region). \(\sigma\) = mutation step size / spread (large \(\sigma\) = big Gaussian jumps = explore; small \(\sigma\) = fine tuning = exploit). \(\varphi\) = fraction of mutations that improved the individual (drives the \(1/5\) rule). \(F\) = DE difference-vector scale (bigger \(F\) = larger population-driven jumps). \(N(0,\sigma)\) = zero-mean Gaussian noise of width \(\sigma\). \(p_c,p_m\) = crossover and per-gene mutation probabilities; \(L\) = chromosome length, so \(p_m\approx1/L\) flips about one gene per individual.
+
+\section{Memetic Algorithms}
+Extra step vs plain EAs = local search / local improvement applied to a generated candidate (after crossover/mutation, before/around selection). Advantage: refines the candidate in its neighbourhood \(\Rightarrow\) stronger exploitation and faster convergence than stochastic operators alone.\\
+Local-search budget \(k\)/generation on a multimodal function: prefer (C) the \(k\) most diverse individuals so refinement is spread across basins and avoids premature convergence; failure mode: diverse points may sit in poor regions, wasting budget. (A) best \(k\) is also defensible (fast improvement in good basins) but risks diversity collapse.

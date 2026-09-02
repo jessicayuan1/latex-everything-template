@@ -1,0 +1,52 @@
+\runsec{Winter 2026 Final (with answers).}
+This closely resembles the upcoming final; each part states what is asked, then the answer.
+
+\runsub{Q1 Search [10] --- graph.}
+Start \(S\), goal \(G\), ties broken alphabetically. Edges: \(S\!\to\!A{=}1\), \(S\!\to\!B{=}4\), \(A\!\to\!C{=}4\), \(A\!\to\!D{=}2\), \(B\!\to\!D{=}1\), \(C\!\to\!G{=}3\), \(D\!\to\!G{=}5\).
+\fitfig{
+\begin{tikzpicture}[font=\tiny,>=Latex,node distance=8mm]
+\node[snode](S){S};
+\node[snode,below left=7mm and 6mm of S](A){A};
+\node[snode,below right=7mm and 6mm of S](B){B};
+\node[snode,below=14mm of A](C){C};
+\node[snode,below=14mm of B](D){D};
+\node[snode,below right=8mm and 3mm of C](G){G};
+\draw(S)--(A) node[midway,left]{1};
+\draw(S)--(B) node[midway,right]{4};
+\draw(A)--(C) node[midway,left]{4};
+\draw(A)--(D) node[midway,above]{2};
+\draw(B)--(D) node[midway,right]{1};
+\draw(C)--(G) node[midway,left]{3};
+\draw(D)--(G) node[midway,right]{5};
+\end{tikzpicture}}
+Heuristics: \(h_1(S,A,B,C,D,G)=(4,3,4,2,3,0)\); \(h_2=(5,4,5,3,5,0)\).\\
+\textbf{(a)} Asks: run UCS; give expansion order, path, cost. By \(g\): \(S(0);A(1),B(4);\) expand \(A\!:C(5),D(3);\) \(D(3)\!:G(8);B(4);C(5)\!:G(8);G\). Order \(S\,A\,D\,B\,C\,G\); path \(S\!\to\!A\!\to\!D\!\to\!G\); cost \(8\).\\
+\textbf{(b)} Asks: run A* with \(h_2\); expansion, path, cost. \(f{=}g{+}h_2\): \(S{:}5;A{:}5,B{:}9;C{:}8,D{:}8;G{:}8\). Order \(S\,A\,C\,D\,G\); path \(S\!\to\!A\!\to\!D\!\to\!G\); cost \(8\).\\
+\textbf{(c)} Asks: is \(h_1\) admissible and consistent? Justify. True costs \(h^*=(8,7,6,3,5,0)\Rightarrow\) all \(h_1\le h^*\) (admissible); every edge \(h_1(n)\le c+h_1(n')\) (e.g.\ \(S{:}4\le1{+}3\)) \(\Rightarrow\) consistent.\\
+\textbf{(d)} Asks: is \(h_2\) admissible and consistent? Yes to both (all edges hold, some tight).\\
+\textbf{(e)} Asks: does one dominate; implication? \(h_2\ge h_1\) everywhere, both admissible \(\Rightarrow h_2\) dominates \(\Rightarrow\) A* with \(h_2\) expands \(\le\) nodes.
+
+\runsub{Q2 SA \& Tabu [10].}
+\textbf{(a)} Asks: SA min \(x^2\) from \(x{=}2\); moves \(x'{=}3(T{=}5,r{=}0.3)\), \(x'{=}4(T{=}6,r{=}0.8)\) --- accept?; and how/when SA explores vs exploits. Move1 \(\Delta{=}5,P{=}e^{-1}{=}0.37{>}0.3\Rightarrow\)accept; move2 \(\Delta{=}12,P{=}e^{-2}{=}0.14{<}0.8\Rightarrow\)reject. High \(T\) early accepts worse (explore); \(T\downarrow\) late \(\Rightarrow\) greedy (exploit).\\
+\textbf{(b)} Asks: Tabu size 2 from \(x{=}4\), moves \(4\!\to\!3\!\to\!2\!\to\!3\); list after each accepted move; accept \(3\) at \(x{=}2\)?; short vs long memory. Lists \([4]\) then \([4,3]\). At \(x{=}2\), \(3\) gives \(9{>}4\) and is tabu, no aspiration \(\Rightarrow\) reject. Short-term list stops cycling; long-term frequency memory diversifies.
+
+\runsub{Q3 ACO \& PSO [20].}
+\textbf{(a)} Asks: ant at \(S\) with \(\tau_{SA,SB,SC}{=}2,1,1\), \(\eta{=}1,2,1\), \(\alpha{=}\beta{=}1\); compute \(P\) to A/B/C; most likely; effect of \(\alpha\!\gg\!\beta\) and \(\beta\!\gg\!\alpha\); one benefit+drawback of pheromone concentrating on one edge. Weights \(2,2,1\Rightarrow P{=}\tfrac25,\tfrac25,\tfrac15\); A,B tie. \(\alpha\!\gg\!\beta\Rightarrow\)A; \(\beta\!\gg\!\alpha\Rightarrow\)B. Concentrating: \(+\)fast exploitation, \(-\)premature convergence.\\
+\textbf{(b)} Asks: PSO min \(x^2\), \(x{=}4,v{=}-1,pbest{=}3,gbest{=}1\), coeffs 1; compute \(v_{t+1},x_{t+1}\); convergence/overshoot/oscillatory?; role of the 3 terms; role of \(\chi\). \(v{=}-1-1-3=-5,x{=}-1\Rightarrow\)overshoot (passes 0). Inertia=momentum/explore; cognitive=pull to \(pbest\); social=pull to \(gbest\). \(\chi\) scales the whole update \(\Rightarrow\) stable, non-diverging.
+
+\runsub{Q4 GA \& GP [20].}
+\textbf{(a)} Asks: GA max \(x^2\), \(P{=}\{001,011,100,110\}\); rank by FPS; will crossover-only converge (no mutation)?; how elitism \(k\) affects pressure (\(+/-\)). \(f{=}\{1,9,16,36\}\Rightarrow\)rank \(110{>}100{>}011{>}001\). Yes converges: selection amplifies fit, crossover cannot restore diversity. Larger \(k\)=more pressure: \(+\)faster convergence, \(-\)diversity loss.\\
+\textbf{(b)} Asks: draw tree of \((+\,(\ast x\,2)\,(-x\,1))\); subtree-mutate \((-x\,1)\!\to\!(+x\,3)\), draw; define bloat + one cause + one control; identify the shown program-representation type + write its program; compare GA vs GP search space; explain syntax vs semantics (GSGP) + one implication. Trees drawn in the GP section. Bloat = size grows without fitness gain (cause: introns/unrestricted crossover; control: parsimony pressure or depth cap). Figure = Cartesian/graph GP with reuse \(\Rightarrow y=(x_1{+}x_2)x_2-x_1\). GA = fixed-length regular space; GP = variable-size structural \(\Rightarrow\) GP harder. Syntax=structure, semantics=behaviour; GSGP smooths the landscape but grows programs.
+
+\runsub{Q5 DE, Memetic, ES [20].}
+\textbf{(a)} Asks: how DE mutation differs from other EAs; explain mutant/trial vectors + selection. DE uses scaled population differences \(v=x_{r1}+F(x_{r2}-x_{r3})\) (directional) vs GA flip / ES Gaussian. Offspring: mutant \(v\to\) crossover with target = trial \(\to\) greedy select (keep trial iff better).\\
+\textbf{(b)} Asks: extra step memetic adds, when applied, one advantage; for multimodal + budget \(k\) choose best-\(k\)/random-\(k\)/diverse-\(k\) + failure mode. Adds local search on candidates (after variation) \(\Rightarrow\) exploitation. Pick (C) diverse-\(k\) (spreads refinement, avoids premature convergence); failure: diverse points may be in poor regions.\\
+\textbf{(c)} Asks: list ES adaptation levels + effect. Object variables (where), step sizes \(\sigma\) (how far: big explore/small refine), orientation/covariance (which directions).
+
+\runsub{Q6 Memetic control design [20].}
+Setup: learn \(T_{in}(t{+}1)=f(x_1,x_2,x_3,u)\) from data (Phase 1), then pick \(u\) minimising \(J=\sum_k[(T_{in}{-}T_{ref})^2+\lambda u^2]\) (Phase 2).\\
+\textbf{(a)} Asks: memetic strategy --- what is explored globally, refined locally, when local search runs. Globally evolve model \emph{structure} with GP; locally refine \emph{parameters} with local search, applied after structural candidates are evaluated.\\
+\textbf{(b)} Asks: two algorithms to discover structure of \(f\) + their search space. Tree GP (expression trees of \(F,T\)); Cartesian GP (DAGs with reuse).\\
+\textbf{(c)} Asks: how one evolves structure toward better fit. Score each tree on data (MSE), select better fits, apply subtree crossover/mutation over generations.\\
+\textbf{(d)} Asks: local search to pick control sequence \(u(t..t{+}H)\) and how it uses \(f\). HC/SA/Tabu: simulate \(T_{in}\) with \(f\), plug into \(J\), tweak one entry, keep if \(J\) drops.\\
+\textbf{(e)} Asks: why Phase 1 or Phase 2 alone is insufficient. Model alone gives no policy; control alone tunes on an inaccurate model \(\Rightarrow\) need both, so a memetic split fits.

@@ -1,0 +1,99 @@
+\section{Genetic Algorithms (Population)}
+
+\subsection*{Population vs Trajectory}
+Population: many candidates \( P(t)=\{x_1,\dots,x_N\} \); built-in parallelism + diversity; escapes local optima more easily.\\
+No Free Lunch: averaged over all problems no search beats random; gains come from injected ``active information'' via representation, operators, selection, fitness.\\
+Families: GA, Evolution Strategies, Evolutionary Programming, PSO, ACO.
+
+\subsection*{Biology Mapping}
+\resizebox{\linewidth}{!}{%
+\(
+\begin{array}{lll}
+\text{Biology} & \text{GA} & \text{Optim.}\\
+\hline
+\text{Individual} & \text{chromosome} & \text{candidate}\\
+\text{Gene} & \text{variable} & \text{parameter}\\
+\text{Fitness} & \text{fitness fn} & \text{objective}\\
+\text{Environment} & \text{problem} & \text{constraints}
+\end{array}
+\)
+}
+Genotype: encoded form GA operates on. Phenotype: actual solution. Fitness \(f(x)\): scalar quality, only feedback signal.
+
+\subsection*{SGA Cycle (Holland 1975)}
+Init \(P(0)\) \(\to\) evaluate \(\to\) repeat\{ select parents \(\to\) crossover \(\to\) mutation \(\to\) replace \(\to\) evaluate \}.\\
+GGA: full replacement each generation. SSGA: incremental (few replaced), lower pressure, better diversity.\\
+GA = variation + selection. Selection only \(\Rightarrow\) collapse; variation only \(\Rightarrow\) random drift.
+
+\fitfig{
+\begin{tikzpicture}[node distance=7mm and 5mm,font=\tiny,every node/.style={align=center}]
+\node[mx](p){Pop};
+\node[mx,right=of p](e){Eval};
+\node[mx,right=of e](s){Select};
+\node[mx,below=of s](c){Cross};
+\node[mx,left=of c](m){Mutate};
+\node[mx,left=of m](r){Replace};
+\draw[ed](p)--(e); \draw[ed](e)--(s); \draw[ed](s)--(c);
+\draw[ed](c)--(m); \draw[ed](m)--(r); \draw[ed](r)--(p);
+\end{tikzpicture}}
+
+\subsection*{Representation}
+Binary \(b\in\{0,1\}^L\). Decode integer \(I\) to real \(x\in[x_{min},x_{max}]\):\\
+\(x=x_{min}+\dfrac{I}{2^n-1}\,(x_{max}-x_{min})\)\\
+Resolution (step): \(\Delta x=\dfrac{x_{max}-x_{min}}{2^n-1}\).\\
+Hamming dist = \# differing bits; binary distorts locality:\\
+\(7=0111,\; 8=1000\Rightarrow\) Hamming 4 though values adjacent.\\
+Gray code: consecutive integers differ by 1 bit \(\Rightarrow\) smoother landscape.\\
+Real-valued: genotype = phenotype, smooth variation. Permutation: ordering (TSP, scheduling), validity is a hard constraint.
+
+\subsection*{Crossover (rate \(p_c\), \(0.6\)--\(0.9\))}
+Draw \( u\sim U(0,1) \); if \( u\le p_c \) recombine, else copy parents.\\
+1-point: swap tails after cut \(k\). N-point: alternate segments. Uniform: per-gene coin flip (max mixing, disruptive).\\
+Real: arithmetic \( x^{(c)}=\alpha x^{(1)}+(1-\alpha)x^{(2)} \); BLX-\(\alpha\) samples \([\min-\alpha d,\max+\alpha d]\), \(d=|x^{(1)}-x^{(2)}|\); SBX (index \(\eta_c\): large=near parents).
+
+\subsection*{Mutation (rate \(p_m\approx 1/L\))}
+Per gene: if \( u\le p_m \) mutate. Bit-flip; swap/scramble/inversion (permutations).\\
+Real: Gaussian \( x_i'=x_i+\epsilon,\;\epsilon\sim N(0,\sigma^2) \); adaptive \(\sigma\) shrinks over generations.\\
+Too low \(\Rightarrow\) stagnation; too high \(\Rightarrow\) random walk. Maintains diversity / escapes traps.
+
+\subsection*{Selection}
+FPS / roulette: \( p_i=\dfrac{f_i}{\sum_j f_j} \). Sensitive to scaling; weak pressure late; shifting all \(f\) by a constant changes \(p_i\).\\
+Rank-based: probability by rank (scale/translation invariant).\\
+Tournament: best of \(k\) random; pressure set by \(k\) (\(k{=}1\) none, large \(k\) aggressive); no scaling needed.\\
+SUS: evenly spaced pointers. Elitism: keep best \(E\); stabilises but raises pressure.\\
+Premature convergence: diversity lost early (high pressure, small \(N\), strong elitism, deceptive landscape).
+
+\subsection*{FPS Example}
+Selection prob \(p_i=f_i/\sum_j f_j\).\\
+Early (spread fitness):\\
+\(f=\{40,20,10\}\Rightarrow p=\{0.57,0.29,0.14\}\)\\
+\(\Rightarrow\) strong pressure toward best.\\
+Late (similar fitness):\\
+\(f=\{101,100,99\}\Rightarrow p\approx\{0.34,0.33,0.33\}\)\\
+\(\Rightarrow\) pressure nearly gone (FPS weakness).
+
+\subsection*{Deception (3-bit trap)}
+Let \(u=\#\)ones in the block. \(f(000)=4\) (global); \(f(u)=u\) for \(u\in\{1,2,3\}\).\\
+Selection rewards more 1s \(\Rightarrow\) population climbs to \(111\) (local opt); reaching \(000\) needs a disruptive jump.\\
+Here higher selection pressure speeds up failure (loss of diversity).
+
+\subsection*{Binary GA Example (max \(x^2\), 5-bit)}
+Population and fitness \(f=x^2\):\\
+\(A{=}01001\,(9),\; B{=}10100\,(20)\)\\
+\(C{=}00110\,(6),\; D{=}11100\,(28)\)\\
+\(f:\;81,\;400,\;36,\;784\).\\
+Tournament \(k{=}2\Rightarrow\) parents \([A,D,B,D]\).\\
+1-point cut after bit 3, \(p_c{=}0.8\); bit-flip \(p_m{=}0.2\); elitism keeps \(D\).\\
+Best improves \(28^2\!\to\!29^2\); population drifts to larger \(x\).
+
+\subsection*{PMX (permutation crossover)}
+Copy segment \(P_1[c_1{:}c_2]\) into child; build value mapping from the aligned \(P_1\leftrightarrow P_2\) segment; fill remaining slots from \(P_2\), repairing duplicates by following the mapping chain until an unused value appears.\\
+Parents (cut after pos 3,6):\\
+\(P_1=123\,|\,456\,|\,78\)\\
+\(P_2=572\,|\,184\,|\,63\)\\
+Map \(4{\leftrightarrow}1,\;5{\leftrightarrow}8,\;6{\leftrightarrow}4\); child \(=87245613\).\\
+Swap mutation keeps the permutation valid.
+
+\subsection*{Exploration vs Exploitation}
+Crossover: large jumps, recombine building blocks (exploration). Mutation: local refinement + diversity. Selection: exploitation. Tuning GA = balancing these.\\
+GA is anytime; termination (max gens / evals / convergence / target) does not imply optimality. Poor choice when problem is convex/smooth with usable gradients.

@@ -1,0 +1,70 @@
+\section{Uninformed (Blind) Search}
+
+\subsection*{Generic Search Loop}
+Build search tree over problem graph; repeat: choose a node from fringe, goal-test, expand (generate children).\\
+Strategy = how the next fringe node is chosen (the data structure).\\
+Node states: explored / on frontier (fringe) / unexplored.\\
+Repeated states: keep lowest-cost; check on generation (adding to fringe) or on expansion (popping).
+
+\subsection*{BFS}
+Expand shallowest node; fringe = FIFO queue; new successors to the back.\\
+Nodes generated to depth \(d\): \( 1+b+b^2+\cdots+b^d=O(b^{d+1}) \).\\
+Complete (if \(b\) finite); optimal only if path cost = depth (equal step costs); returns shallowest goal.\\
+Time \( O(b^{d+1}) \), Space \( O(b^{d+1}) \).
+
+\subsection*{Uniform-Cost Search (UCS)}
+Expand cheapest node by path cost \( g(n) \); fringe = priority queue.\\
+Goal test ON EXPANSION (not generation): a generated goal may be costlier than a queued node, optimal only when it reaches the front.\\
+Needs step cost \( \ge \varepsilon>0 \) (no zero/negative edges). \(=\) Dijkstra; \(=\) BFS when costs equal.\\
+Complete + optimal. Effective depth \(\lfloor C^*/\varepsilon\rfloor\).\\
+Time/Space \(O\!\left(b^{\,1+\lfloor C^*/\varepsilon\rfloor}\right)\); \(C^*\)=optimal cost.
+
+\subsection*{DFS}
+Expand deepest node; fringe = LIFO stack.\\
+NOT complete (infinite depth / loops); NOT optimal.\\
+Time \( O(b^m) \); Space \( O(b\,m) \) (linear) -- main advantage.\\
+Can beat BFS for dense solution spaces.
+
+\subsection*{Depth-Limited Search (DLS)}
+DFS with cutoff \(l\); always terminates.\\
+Complete iff \( d\le l \) (fails if \(l<d\)); not optimal.\\
+Time \( O(b^l) \), Space \( O(b\,l) \). If \( l\gg d \), costlier than needed.
+
+\subsection*{Iterative Deepening (IDS/DFID)}
+Run DLS with \( l=0,1,2,\dots \) Combines DFS space with BFS completeness.\\
+Complete (if \(b\) finite); optimal if path cost non-decreasing in depth.\\
+Time \( O(b^d) \), Space \( O(b\,d) \). Re-expansion overhead is small (lowest levels dominate).
+
+\subsection*{Bidirectional}
+Search forward from \(s_0\) and backward from goal; meet in middle.\\
+Time/Space \( \approx O(b^{d/2}) \); needs invertible actions + known goal state.
+
+\subsection*{Comparison}
+\resizebox{\linewidth}{!}{%
+\(
+\begin{array}{lccccc}
+ & \text{Compl.} & \text{Opt.} & \text{Time} & \text{Space} \\
+\hline
+\text{BFS} & Y^{b} & Y^{c} & b^{d+1} & b^{d+1}\\
+\text{UCS} & Y & Y & b^{1+C^*/\varepsilon} & b^{1+C^*/\varepsilon}\\
+\text{DFS} & N & N & b^{m} & b\,m\\
+\text{DLS} & Y^{l\ge d} & N & b^{l} & b\,l\\
+\text{IDS} & Y^{b} & Y^{c} & b^{d} & b\,d\\
+\text{Bidir} & Y^{b} & Y^{c} & b^{d/2} & b^{d/2}
+\end{array}
+\)
+}\\
+\(b\): \(b\) finite. \(c\): equal/non-decreasing step costs.
+
+\subsection*{Search Tree Anatomy}
+\fitfig{
+\begin{tikzpicture}[level distance=8mm,level 1/.style={sibling distance=14mm},level 2/.style={sibling distance=7mm}]
+\node[snode]{\(s_0\)}
+  child{node[snode]{\(s_1\)}
+    child{node[snode]{}}
+    child{node[snode]{}}}
+  child{node[snode]{\(s_2\)}
+    child{node[snode]{}}
+    child{node[snode]{}}};
+\end{tikzpicture}}
+Root \(s_0\); expand = generate children; fringe = generated-but-not-expanded leaves.
